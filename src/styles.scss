@@ -7,7 +7,7 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
-@import url("https://use.typekit.net/jnq3uxd.css");
+//@import url("https://use.typekit.net/jnq3uxd.css");
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -36,19 +36,19 @@ $custom-orange: (
     A400: #ff9100,
     A700: #ff6d00,
     contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
+        50: rgb(26, 24, 44),
+        100: rgb(26, 24, 44)y,
+        200: rgb(26, 24, 44)y,
+        300: rgb(26, 24, 44)y,
+        400: rgb(26, 24, 44),
         500: white,
         600: white,
         700: white,
         800: white,
         900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
+        A100: rgb(26, 24, 44),
+        A200: rgb(26, 24, 44),
+        A400: rgb(26, 24, 44),
         A700: white,
     )
 );
@@ -65,6 +65,12 @@ $firestarter-warn: mat-palette($mat-red);
 // Create the theme object (a Sass map containing all of the palettes).
 $firestarter-theme: mat-dark-theme($firestarter-primary, $firestarter-accent, $firestarter-warn);
 
+// -or- Can set colour by hex value too
+$custom-background-color: #8b0404;
+
+$background: map-get($firestarter-theme, background);
+$background: map_merge($background, (background: $custom-background-color));
+$firestarter-theme: map_merge($firestarter-theme, (background: $background));
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
@@ -75,7 +81,7 @@ $firestarter-theme: mat-dark-theme($firestarter-primary, $firestarter-accent, $f
 
 
 html, body { height: 100%; }
-body { margin: 0; font-family: sofia-pro, sans-serif; }
+body { margin: 0; font-family: Roboto, sans-serif; }
 a {
     color: white;
     text-decoration: none;

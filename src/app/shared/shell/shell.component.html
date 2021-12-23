@@ -8,8 +8,6 @@
      
       <a mat-list-item routerLink="/" (click)="drawer.close()">Home</a>
       <a mat-list-item routerLink="/login" (click)="drawer.close()">Login</a>
-      <a mat-list-item routerLink="/kanban" (click)="drawer.close()">Kanban Demo</a>
-      <a mat-list-item routerLink="/customers" (click)="drawer.close()">SSR Demo</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -24,16 +22,15 @@
 
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span class="logo" routerLink="/">🔥 Angular Firestarter</span>
+      <span class="logo" routerLink="/"><i class="material-icons" style="color:red">favorite</i> Marie-Pier et Philippe</span>
 
       <span class="fill-space"></span>
       <div *ngIf="!(isHandset$ | async)">
-        <a mat-button routerLink="/kanban">🍱 Kanban Demo</a>
-        <a mat-button routerLink="/customers">⚡ SSR Demo</a>
 
-        <a mat-button routerLink="/login" *ngIf="!(afAuth.authState | async)">🔑 Login</a>
+
+        <a mat-button routerLink="/login" *ngIf="!(afAuth.authState | async)"><i>🔑</i>  Login</a>
         <a mat-button routerLink="/login" *ngIf="afAuth.authState | async as user" >
-          <img class="avatar" [src]="user.photoURL || 'assets/default-user.svg'">
+          <img title="Photo" class="avatar" [src]="user.photoURL || 'assets/default-user.svg'">
           Profile
         </a>
 
@@ -44,23 +41,16 @@
       </button>
       
       <mat-menu #menu="matMenu">
-        <a mat-menu-item href="https://fireship.page.link/slack">
-          <i>💬</i>
-          <span>Chat on Slack</span>
+        <a rel="noopener" mat-menu-item href="https://app.slack.com/client/TVCMB3G6S/CUZ1DD1BM" target="_blank">
+          <i>🧹</i>
+          <span>Curation</span>
         </a>
-        <a mat-menu-item href="https://github.com/codediodeio/angular-firestarter">
-          <i>💾</i>
-          <span>Code on Github</span>
+        <a rel="noopener" mat-menu-item href="https://app.slack.com/client/TVCMB3G6S/G01F4JXGW68" target="_blank">
+          <i>✏️</i>
+          <span>A faire</span>
         </a>
-        <a mat-menu-item href="https://fireship.io/courses/angular">
-          <i>🔥</i>
-          <span>Full Course on Fireship</span>
-        </a>
-
-        <a mat-menu-item href="https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA">
-          <i>📺</i>
-          <span>Watch on the YouTube</span>
-        </a>
+        
+        
       </mat-menu>
     </mat-toolbar>
 

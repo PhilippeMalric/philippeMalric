@@ -6,6 +6,10 @@ import { AuthGuard } from './user/auth.guard';
 const routes: Routes = [
   { path: '', component: HomePageComponent },
   {
+    path: 'mppm',
+    loadChildren: () => import('./mppm/mppm.module').then(m => m.MppmModule)
+  },
+  {
     path: 'login',
     loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
@@ -19,7 +23,14 @@ const routes: Routes = [
     path: 'customers',
     loadChildren: () =>
       import('./customers/customers.module').then(m => m.CustomersModule),
+  },
+  {
+    path: 'communication',
+    loadChildren: () =>
+      import('./communication/communication.module').then(m => m.CommunicationModule),
+      canActivate: [AuthGuard]
   }
+  
 ];
 
 @NgModule({

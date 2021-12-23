@@ -16,6 +16,10 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
+//Angular material
+import {MatGridListModule} from '@angular/material/grid-list';
+
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -23,6 +27,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     HomePageComponent,
   ],
   imports: [
+    MatProgressBarModule,
+    MatGridListModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,

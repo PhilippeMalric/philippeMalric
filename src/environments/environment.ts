@@ -5,13 +5,14 @@
 export const environment = {
   production: false,
   firebase:  {
-    apiKey: 'AIzaSyAKlEX5a8PQaadYNSrohqfl33O37Kjkv1Y',
-    authDomain: 'angular-voxer.firebaseapp.com',
-    databaseURL: 'https://angular-voxer.firebaseio.com',
-    projectId: 'angular-voxer',
-    storageBucket: 'angular-voxer.appspot.com',
-    messagingSenderId: '122050526979',
-    appId: '1:122050526979:web:529304dce5ffca7a'
+    apiKey: "AIzaSyCSdPG054VfjNJuPXh_3v75oNKpzuMWAec",
+    authDomain: "mppm-home-app.firebaseapp.com",
+    databaseURL: "https://mppm-home-app-default-rtdb.firebaseio.com",
+    projectId: "mppm-home-app",
+    storageBucket: "mppm-home-app.appspot.com",
+    messagingSenderId: "118436224040",
+    appId: "1:118436224040:web:bf687bd10d4139378e291d",
+    measurementId: "G-CTJ94M8R5T"
   }
 };
 

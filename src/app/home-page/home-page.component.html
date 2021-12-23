@@ -1,16 +1,49 @@
 
 <header>
-    <h1>Angular Firestarter</h1>
+    <mat-card class="home-card">
+        <mat-card-subtitle>Bienvenue sur le site de Marie-Pier et Philippe</mat-card-subtitle>
+        <mat-card-title>Marie-Pier est une femme extraordinaire!</mat-card-title>
+        <mat-card-subtitle>Philippe l'aime beaucoup</mat-card-subtitle>
+        <mat-card-content>
+            
+            <div  class="buttonDiv1" style="width:200px;">
+                <mat-grid-list cols="2" rowHeight="100px">
+                    <mat-grid-tile>
+                        
+                        <button mat-icon-button color="warn" aria-label="Example icon button with a heart icon" routerLink="/mppm">
+                            <mat-icon style="color: red;" routerLink="/mppm">favorite</mat-icon>
+                        </button>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <button mat-icon-button color="warn"  routerLink="/communication">
+                            <mat-icon style="color: rgb(4, 0, 255);" >compare_arrows</mat-icon>
+                        </button>
+                    </mat-grid-tile>
+              
+                </mat-grid-list>
+            </div>
+        </mat-card-content>
+        <mat-divider inset></mat-divider>
+        <mat-card-actions>
+            <div style="width: 200px; margin: auto;">
+                <mat-grid-list cols="2" rowHeight="50px">
+                    <mat-grid-tile>
+                        <button mat-raised-button color="warn">Partage</button>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+                        <button mat-raised-button color="warn">Aime</button>
+                    </mat-grid-tile>
+              
+                </mat-grid-list>
+            </div>
+           
+        </mat-card-actions>
+        <mat-card-footer>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-card-footer>
+      </mat-card>
 
-    <iframe src="https://player.vimeo.com/video/359329279?color=ff9933&title=0&byline=0&portrait=0" width="640" height="361" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-
-    <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/OWy0e231eMI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
-    <p>
-        <a mat-raised-button color="accent" style="margin-right: 10px;" href="https://fireship.io/courses/angular" target="blank">Build this App</a>
-        <a mat-raised-button href="https://github.com/codediodeio/angular-firestarter" target="blank">Source</a>
-    </p>
-
-
+   
 </header>
 
 
