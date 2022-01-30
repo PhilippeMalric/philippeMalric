@@ -1,0 +1,56 @@
+<header>
+    <mat-card class="home-card">
+        <mat-card-content>   
+            <form class="depenses-form" >
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Message</mat-label>
+                    <input matInput maxlength="256" placeholder="Ex. Épicerie " [formControl]="message">
+                    <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+                </mat-form-field>
+                <mat-form-field class="number" appearance="fill">
+                    <mat-label>Prix</mat-label>
+                    <input class="number-input" matInput type="number"  placeholder="100" [formControl]="prix" color="warn">
+                    <mat-icon style="color: rgb(204, 201, 2);" >attach_money</mat-icon>
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="add()">Ajoute la dépense</button>
+        </mat-card-actions>
+    </mat-card>
+      
+<!--Afaire
+
+    liste modifiable avec auteur
+
+-->
+ <h1>Les dépenses</h1>
+
+        <div  class="buttonDiv1" style="max-width:10000px;">
+            <mat-grid-list cols="4" rowHeight="200px">
+                <mat-grid-tile *ngFor="let e of (items)">
+                    <mat-card class="home-card">
+                        <mat-card-title>{{e.auteur}}</mat-card-title>
+                        <mat-card-subtitle>{{e.prix}} $</mat-card-subtitle>
+                        <mat-card-content>
+                            <p>{{e.message}}</p>
+                        </mat-card-content>
+
+                    <mat-card-actions>
+                        <button mat-mini-fab color="warn" (click)="delete(e.id_firestore)">X</button>
+
+                    </mat-card-actions>
+                    </mat-card>
+                
+
+                   
+                </mat-grid-tile>
+          
+            </mat-grid-list>
+        
+        
+       
+    </div>
+
+
+</header>
