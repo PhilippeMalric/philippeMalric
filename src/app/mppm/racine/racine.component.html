@@ -1,5 +1,19 @@
 <header>
 
  <h1>Espace de l'amour</h1>
+ <app-video *ngIf="viewOn"></app-video>
+
+ <mat-grid-list cols="1" rowHeight="100px">
+    <mat-grid-tile>
+        <button *ngIf="!viewOn" mat-icon-button color="warn"  routerLink="/video" (click)="clickVideo()">
+            <mat-icon style="color: rgb(0, 0, 0);" >video_label</mat-icon>
+        </button>
+
+    </mat-grid-tile>    
+                    
+</mat-grid-list>
+
+
+
 
 </header>

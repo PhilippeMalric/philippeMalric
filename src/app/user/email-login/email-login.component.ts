@@ -5,6 +5,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { take } from 'rxjs/operators';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-email-login',
@@ -19,7 +21,7 @@ export class EmailLoginComponent implements OnInit {
 
   serverMessage: string;
 
-  constructor(private afAuth: AngularFireAuth, private fb: FormBuilder) {}
+  constructor(private afAuth: AngularFireAuth, private fb: FormBuilder, private userService:UserService) {}
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -75,10 +77,10 @@ export class EmailLoginComponent implements OnInit {
 
     try {
       if (this.isLogin) {
-        await this.afAuth.signInWithEmailAndPassword(email, password);
+        await this.onSubmitHelper(email, password);
       }
       if (this.isSignup) {
-        await this.afAuth.createUserWithEmailAndPassword(email, password);
+        await this.onSubmitHelper(email, password);
       }
       if (this.isPasswordReset) {
         await this.afAuth.sendPasswordResetEmail(email);
@@ -90,4 +92,41 @@ export class EmailLoginComponent implements OnInit {
 
     this.loading = false;
   }
+
+  async onSubmitHelper(email, password){
+
+    
+
+    if (this.isLogin) {
+      return this.afAuth.signInWithEmailAndPassword(email, password).then((data)=>{
+
+
+        console.log(data)
+            let name1 = data.user.email.split("@")[0]
+            if(name1=="mpier92"){
+      
+              name1 = "Marie-Pier Branchaud"
+      
+            }
+            this.userService.userName.next(name1)
+          
+      })
+    }
+    if (this.isSignup) {
+      return this.afAuth.createUserWithEmailAndPassword(email, password).then((data)=>{
+        console.log(data)
+        let name1 = data.user.email.split("@")[0]
+        if(name1=="mpier92"){
+  
+          name1 = "Marie-Pier"
+  
+        }
+        this.userService.userName.next(name1)
+      
+  
+      })
+    }
+
+  }
+
 }

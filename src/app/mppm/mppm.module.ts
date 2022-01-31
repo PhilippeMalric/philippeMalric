@@ -9,12 +9,13 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MppmRoutingModule } from './mppm-routing.module';
 import { RacineComponent } from './racine/racine.component';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
   declarations: [
 
-    RacineComponent 
-    
+    RacineComponent ,
+    VideoComponent
   ],
   imports: [
     CommonModule,

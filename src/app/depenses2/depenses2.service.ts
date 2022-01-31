@@ -4,13 +4,15 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { from, Observable, pipe } from 'rxjs';
 import { concatMap, map, take } from 'rxjs/operators';
 
-interface Message  {
+export interface Message  {
   id_firestore:string,
   seqNo:number,
   type:string,
   message:string,
   auteur:string
-  prix:number
+  prix:number,
+  deleted:boolean,
+  date:string
 } 
 
 function convertSnaps<T>(results)  {
@@ -59,6 +61,12 @@ export class Depenses2Service {
     return from(this.afs.doc(`depenses2/${messageid}`).delete());
 }
 
+falsedeleteMessage(messageid:string,changes: Partial<Message>) {
+  console.log(messageid)
+  changes.deleted = true
+  return from(this.afs.doc(`depenses2/${messageid}`).update(changes));
+}
+
 updateMessage(messageid:string, changes: Partial<Message>):Observable<any> {
     return from(this.afs.doc(`depenses2/${messageid}`).update(changes));
 }
@@ -82,7 +90,7 @@ console.log("inside createMessage2")
                     seqNo: lastCourseSeqNo + 1,
                     id_firestore:messageid
                 }
-
+                
                 console.log(message)
 
                 let save$: Observable<any>;

@@ -29,7 +29,41 @@ const routes: Routes = [
     loadChildren: () =>
       import('./communication/communication.module').then(m => m.CommunicationModule),
       canActivate: [AuthGuard]
+  },
+  {
+    path: 'epicerie',
+    loadChildren: () =>
+      import('./epicerie/epicerie.module').then(m => m.EpicerieModule),
+      canActivate: [AuthGuard]
+  },
+  {
+    path: 'reve',
+    loadChildren: () =>
+      import('./reve/reve.module').then(m => m.ReveModule),
+      canActivate: [AuthGuard]
+  },
+  {
+    path: 'customers',
+    loadChildren: () =>
+      import('./customers/customers.module').then(m => m.CustomersModule),
+  },
+  {
+    path: 'form',
+    loadChildren: () =>
+      import('./forms_example/forms_example.module').then(m => m.FormsExampleModule)
+  },
+  {
+    path: 'depenses',
+    loadChildren: () =>
+      import('./depenses/depenses.module').then(m => m.DepensesModule)
+  },
+  {
+    path: 'depenses2',
+    loadChildren: () =>
+      import('./depenses2/depenses2.module').then(m => m.Depenses2Module)
   }
+  
+
   
 ];
 
