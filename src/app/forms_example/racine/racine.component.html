@@ -1,0 +1,95 @@
+<header>
+
+<!--     <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Message</mat-label>
+          <input matInput #message maxlength="256" placeholder="Ex. J'aimerais que ... " >
+          <mat-hint align="start"><strong>Écris ce que tu veux (moins de 260 caractères)</strong> </mat-hint>
+          <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+        </mat-form-field>
+      </form>
+      <button mat-raised-button color="primary" (click)="add(message.value)">Ajoute le message</button>
+Afaire
+
+    liste modifiable avec auteur
+
+
+ <h1>Espace de communication</h1>
+
+        <div  class="buttonDiv1" style="max-width:10000px;">
+            <mat-grid-list cols="4" rowHeight="200px">
+                <mat-grid-tile *ngFor="let e of (items)">
+                    <mat-card class="home-card">
+                        <mat-card-subtitle>Type</mat-card-subtitle>
+                        <mat-card-title>Nom</mat-card-title>
+                        <mat-card-content>
+                            {{e.message}}
+                        </mat-card-content>
+                    </mat-card>
+                
+                    <mat-card-actions>
+                        <button mat-raised-button color="warn" (click)="delete(e.id_firestore)">Delete</button>
+
+                    </mat-card-actions>
+
+                   
+                </mat-grid-tile>
+          
+            </mat-grid-list>
+        
+        
+       
+    </div>
+ -->
+
+<!--  <label>Radio group</label>
+ <div>
+   <input
+     type="radio"
+     id="radio-1"
+     name="formRadioGroup"
+     [value]="1"
+     [(ngModel)]="model.radio"
+   />
+   <label for="radio-1">Radio One</label>
+ </div>
+
+ <div>
+   <input
+     type="radio"
+     id="radio-2"
+     name="formRadioGroup"
+     [value]="2"
+     [(ngModel)]="model.radio"
+   />
+   <label for="radio-2">Radio Two</label>
+ </div>
+
+ <div>
+   <input
+     type="radio"
+     id="radio-3"
+     name="formRadioGroup"
+     [value]="3"
+     [(ngModel)]="model.radio"
+   />
+   <label for="radio-3">Radio Three</label>
+ </div> -->
+
+    <label>Name:
+        <input type="text" [formControl]="name">
+        <p>
+            value: {{name.value}}
+        </p>
+    </label>
+    <button (click)="upDateName()">Update Name</button>
+
+
+
+
+
+
+
+
+
+</header>

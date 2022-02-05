@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { MatInput } from '@angular/material/input';
 
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
+import { UserService } from 'src/app/user/user.service';
 import { CommunicationService } from '../communication.service';
 
 @Component({
@@ -14,7 +16,10 @@ export class RacineComponent implements OnInit {
   items: any
   id: string;
 
-  constructor(private communicationService:CommunicationService) {
+  constructor(private communicationService:CommunicationService,
+              private afAuth: AngularFireAuth,
+              private userService:UserService
+    ) {
 
 
     
@@ -37,8 +42,11 @@ add(item:string){
   console.log(item)
 
   this.id = this.communicationService.create_Id()
-
-  this.communicationService.createMessage({type:"message",message:item},this.id).subscribe()
+  this.userService.userName.pipe(take(1)).subscribe((data)=>{
+    console.log(data)
+    this.communicationService.createMessage({auteur:data,type:"message",message:item},this.id).subscribe()
+    
+  })
 
 
 

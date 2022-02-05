@@ -6,8 +6,8 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
      
-      <a mat-list-item routerLink="/" (click)="drawer.close()">Home</a>
-      <a mat-list-item routerLink="/login" (click)="drawer.close()">Login</a>
+      <a mat-list-item routerLink="/" (click)="drawer.close()">Maison</a>
+      <a mat-list-item routerLink="/login" (click)="drawer.close()">Inscription</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -17,7 +17,7 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+        >
 
 
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
@@ -28,7 +28,7 @@
       <div *ngIf="!(isHandset$ | async)">
 
 
-        <a mat-button routerLink="/login" *ngIf="!(afAuth.authState | async)"><i>🔑</i>  Login</a>
+        <a mat-button routerLink="/login" *ngIf="!(afAuth.authState | async)"><i>🔑</i>Inscription</a>
         <a mat-button routerLink="/login" *ngIf="afAuth.authState | async as user" >
           <img title="Photo" class="avatar" [src]="user.photoURL || 'assets/default-user.svg'">
           Profile
@@ -41,13 +41,18 @@
       </button>
       
       <mat-menu #menu="matMenu">
-        <a rel="noopener" mat-menu-item href="https://app.slack.com/client/TVCMB3G6S/CUZ1DD1BM" target="_blank">
-          <i>🧹</i>
-          <span>Curation</span>
+        <a rel="noopener" mat-menu-item href="https://philippe-malric.web.app/" target="_blank">
+          <i>😇</i>
+          <span>Philippe app</span>
         </a>
-        <a rel="noopener" mat-menu-item href="https://app.slack.com/client/TVCMB3G6S/G01F4JXGW68" target="_blank">
-          <i>✏️</i>
-          <span>A faire</span>
+        <a rel="noopener" mat-menu-item href="https://marie-pier-app.web.app" target="_blank">
+          <i>👩</i>
+          <span>MPBP app</span>
+        </a>
+        
+        <a rel="noopener" mat-menu-item href="https://earth.nullschool.net/#current/wind/surface/level/overlay=temp/orthographic=285.46,35.80,598" target="_blank">
+          <i>🌎</i>
+          <span>Terre</span>
         </a>
         <a rel="noopener" mat-menu-item href="https://cartagene-curator.web.app/" target="_blank">
           <i>😺</i>

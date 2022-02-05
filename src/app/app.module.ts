@@ -17,8 +17,6 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 //Angular material
-import {MatGridListModule} from '@angular/material/grid-list';
-
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -34,7 +32,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FlexLayoutModule,
     HttpClientModule,
     MatProgressBarModule,
-    MatGridListModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,

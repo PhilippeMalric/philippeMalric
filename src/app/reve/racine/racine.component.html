@@ -1,0 +1,45 @@
+<header>
+
+    <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Message</mat-label>
+          <input matInput #message maxlength="256" placeholder="Ex. J'aimerais que ... " >
+          <mat-hint align="start"><strong>Écris ce que tu veux (moins de 260 caractères)</strong> </mat-hint>
+          <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+        </mat-form-field>
+      </form>
+      <button mat-raised-button color="primary" (click)="add(message.value)">Ajoute le message</button>
+<!--Afaire
+
+    liste modifiable avec auteur
+
+-->
+ <h1>Des Rêves</h1>
+
+        <div  class="buttonDiv1" style="max-width:10000px;">
+            <mat-grid-list cols="4" rowHeight="200px">
+                <mat-grid-tile *ngFor="let e of (items)">
+                    <mat-card class="home-card">
+                        <mat-card-title>{{e.auteur}}</mat-card-title>
+                        <mat-card-content>
+                            {{e.message}}
+                        </mat-card-content>
+
+                    <mat-card-actions>
+                        <button mat-mini-fab color="warn" (click)="delete(e.id_firestore)">X</button>
+
+                    </mat-card-actions>
+                    </mat-card>
+                
+
+                   
+                </mat-grid-tile>
+          
+            </mat-grid-list>
+        
+        
+       
+    </div>
+
+
+</header>

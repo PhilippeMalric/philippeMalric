@@ -20,17 +20,17 @@
             <mat-grid-list cols="4" rowHeight="200px">
                 <mat-grid-tile *ngFor="let e of (items)">
                     <mat-card class="home-card">
-                        <mat-card-subtitle>Type</mat-card-subtitle>
-                        <mat-card-title>Nom</mat-card-title>
+                        <mat-card-title>{{e.auteur}}</mat-card-title>
                         <mat-card-content>
                             {{e.message}}
                         </mat-card-content>
-                    </mat-card>
-                
+
                     <mat-card-actions>
-                        <button mat-raised-button color="warn" (click)="delete(e.id_firestore)">Delete</button>
+                        <button mat-mini-fab color="warn" (click)="delete(e.id_firestore)">X</button>
 
                     </mat-card-actions>
+                    </mat-card>
+                
 
                    
                 </mat-grid-tile>

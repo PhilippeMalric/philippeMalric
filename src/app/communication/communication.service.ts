@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { from, Observable, pipe } from 'rxjs';
 import { concatMap, map, take } from 'rxjs/operators';
@@ -7,7 +8,8 @@ interface Message  {
   id_firestore:string,
   seqNo:number,
   type:string,
-  message:string
+  message:string,
+  auteur:string
 }
 
 function convertSnaps<T>(results)  {
@@ -61,6 +63,7 @@ updateMessage(messageid:string, changes: Partial<Message>):Observable<any> {
 }
 
 createMessage(newMessage: Partial<Message>, messageid:string) {
+  console.log("createMessage",newMessage,messageid)
     return this.afs.collection("items",
             ref => ref.orderBy("seqNo", "desc").limit(1))
         .get()
@@ -78,6 +81,8 @@ console.log("inside createMessage2")
                     seqNo: lastCourseSeqNo + 1,
                     id_firestore:messageid
                 }
+
+                console.log(message)
 
                 let save$: Observable<any>;
 

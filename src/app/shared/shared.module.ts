@@ -16,12 +16,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GoogleChartsModule } from 'angular-google-charts';
 
+import {MatGridListModule} from '@angular/material/grid-list';
+import { ReactiveFormsModule } from '@angular/forms';
+
 const components = [
   ShellComponent, DeleteButtonComponent
 ];
 
 const modules = [
   GoogleChartsModule,
+  ReactiveFormsModule,
+  MatGridListModule,
   CommonModule,
   RouterModule,
   MatToolbarModule,

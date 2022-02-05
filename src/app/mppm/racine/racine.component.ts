@@ -7,9 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RacineComponent implements OnInit {
 
+  viewOn = false
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  clickVideo(){
+    this.viewOn=true;
+  }
 }
