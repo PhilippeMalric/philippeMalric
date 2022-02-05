@@ -14,12 +14,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { GoogleChartsModule } from 'angular-google-charts';
 
 const components = [
   ShellComponent, DeleteButtonComponent
 ];
 
 const modules = [
+  GoogleChartsModule,
   CommonModule,
   RouterModule,
   MatToolbarModule,

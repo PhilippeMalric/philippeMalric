@@ -1,0 +1,66 @@
+<header>
+    <h1>ApiTest</h1>
+    <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Url</mat-label>
+          <input matInput #message  placeholder="https://" >
+          <mat-hint align="start"><strong>url de l'api</strong> </mat-hint>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Index 1</mat-label>
+            <input type="number" matInput #i1  placeholder="0" >
+            <mat-hint align="start"><strong>index debut</strong> </mat-hint>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Index 2</mat-label>
+            <input type="number" matInput #i2  placeholder="10" >
+            <mat-hint align="start"><strong>index fin</strong> </mat-hint>
+        </mat-form-field>
+      </form>
+    <button mat-raised-button color="primary" (click)="send(message.value)">Lance la requête</button>
+<!--
+     <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Message</mat-label>
+          <input matInput #message maxlength="256" placeholder="Ex. J'aimerais que ... " >
+          <mat-hint align="start"><strong>Écris ce que tu veux (moins de 260 caractères)</strong> </mat-hint>
+          <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+        </mat-form-field>
+      </form>
+      <button mat-raised-button color="primary" (click)="add(message.value)">Ajoute le message</button>
+
+ -->
+ <p>https://www.donneesquebec.ca/recherche/api/3/action/datastore_search?limit=1000&resource_id=e84bbc32-06d5-4030-afd4-77d831a9e8fc</p> 
+ <app-donnees-quebec></app-donnees-quebec>
+ <app-viz-google-chart></app-viz-google-chart>
+
+        <div  class="buttonDiv1" style="max-width:10000px;">
+            <mat-card class="field-card" style="display:inline-flex; margin-top: 10px;margin-left: 10px;" *ngFor="let e of fields">
+                <mat-card-content>
+                        <button mat-raised-button color="primary" (click)="field_click(e.id)">{{e.id}}</button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div  class="buttonDiv1" style="max-width:10000px;">
+                    <mat-card class="home-card" *ngFor="let e of elements">
+                        <mat-card-content>
+                           <div  *ngFor="let prop of e;">
+                                <p>{{prop.key}} : {{prop.value}}</p>
+                           </div>
+                           
+                            <!-- <app-viz [data]="e"></app-viz> -->
+                        </mat-card-content>
+                        <mat-card-actions>
+                          
+                        </mat-card-actions>
+                    </mat-card>
+                
+            
+        
+       
+    </div> 
+
+
+</header>
+

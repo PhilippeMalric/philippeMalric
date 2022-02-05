@@ -1,0 +1,32 @@
+<header>
+    <h2>Api donnees Qc</h2>
+    <p>{{url2}}</p>
+    <div  class="buttonDiv1" style="max-width: 500px;margin: auto;max-height: 300px;margin-bottom: 100px;overflow-y: scroll;">
+        <mat-card class="home-card" *ngFor="let e of package_list">
+            <mat-card-content>
+                    <p>{{e}}</p>
+                <!-- <app-viz [data]="e"></app-viz> -->
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="create_url(e)">
+                    get ressources
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div> 
+    <div  class="buttonDiv1" style="max-width: 400px;margin: auto;max-height: 200px;margin-bottom: 100px;overflow-y: scroll;">
+        <mat-card class="home-card" *ngFor="let e of resources">
+            <mat-card-content>
+                    <p>{{e.id}}</p>
+                <!-- <app-viz [data]="e"></app-viz> -->
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="create_url_ressource(e.id)">
+                    create Url
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div> 
+    
+</header>
+

@@ -21,20 +21,20 @@ $custom-typography: mat-typography-config(
 @include mat-core($custom-typography);
 
 $custom-orange: (
-    50: #fff3e0,
-    100: #ffe0b2,
-    200: #ffcc80,
-    300: #ffb74d,
-    400: #ffa726,
-    500: #ff9800,
-    600: #fb8c00,
-    700: #f57c00,
-    800: #ef6c00,
-    900: #e65100,
-    A100: #ffd180,
-    A200: #ffab40,
-    A400: #ff9100,
-    A700: #ff6d00,
+    50: #e0f3ff,
+    100: #b2f0ff,
+    200: #80d7ff,
+    300: #4dffe7,
+    400: #26c2ff,
+    500: #00a2ff,
+    600: #00c9fb,
+    700: #009bf5,
+    800: #0097ef,
+    900: #0064e6,
+    A100: #80dbff,
+    A200: #40a9ff,
+    A400: #00d9ff,
+    A700: #00d9ff,
     contrast: (
         50: rgb(26, 24, 44),
         100: rgb(26, 24, 44)y,
@@ -66,7 +66,7 @@ $firestarter-warn: mat-palette($mat-red);
 $firestarter-theme: mat-dark-theme($firestarter-primary, $firestarter-accent, $firestarter-warn);
 
 // -or- Can set colour by hex value too
-$custom-background-color: #8b0404;
+$custom-background-color: #000cbb;
 
 $background: map-get($firestarter-theme, background);
 $background: map_merge($background, (background: $custom-background-color));

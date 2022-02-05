@@ -6,7 +6,7 @@ import { AuthGuard } from './user/auth.guard';
 const routes: Routes = [
   { path: '', component: HomePageComponent },
   {
-    path: 'mppm',
+    path: 'philippe',
     loadChildren: () => import('./mppm/mppm.module').then(m => m.MppmModule)
   },
   {
@@ -29,6 +29,23 @@ const routes: Routes = [
     loadChildren: () =>
       import('./communication/communication.module').then(m => m.CommunicationModule),
       canActivate: [AuthGuard]
+  },
+  {
+    path: 'sondage',
+    loadChildren: () =>
+      import('./sondage/sondage.module').then(m => m.SondageModule),
+      canActivate: [AuthGuard]
+  },
+  {
+    path: 'apitest',
+    loadChildren: () =>
+      import('./apiTest/apiTest.module').then(m => m.ApiTestModule),
+      //canActivate: [AuthGuard]
+  },
+  {
+    path: 'depenses2',
+    loadChildren: () =>
+      import('./depenses2/depenses2.module').then(m => m.Depenses2Module)
   }
   
 ];

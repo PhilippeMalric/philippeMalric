@@ -21,12 +21,18 @@ import {MatGridListModule} from '@angular/material/grid-list';
 
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
+import { HttpClientModule } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 @NgModule({
   declarations: [
     AppComponent,
     HomePageComponent,
   ],
   imports: [
+    
+    FlexLayoutModule,
+    HttpClientModule,
     MatProgressBarModule,
     MatGridListModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
