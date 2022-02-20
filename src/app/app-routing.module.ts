@@ -46,6 +46,16 @@ const routes: Routes = [
     path: 'depenses2',
     loadChildren: () =>
       import('./depenses2/depenses2.module').then(m => m.Depenses2Module)
+  },
+  {
+    path: 'tresor',
+    loadChildren: () =>
+      import('./tresor/tresor.module').then(m => m.TresorModule)
+  },
+  {
+    path: 'synchro',
+    loadChildren: () =>
+      import('./synchro/synchro.module').then(m => m.TresorModule)
   }
   
 ];
