@@ -58,7 +58,7 @@ export class SynchroService {
 
 
   deleteMessage(messageid:string) {
-    console.log(messageid)
+    console.log("deleted" ,messageid)
     return from(this.afs.doc(`synchro/${messageid}`).delete());
 }
 
@@ -74,21 +74,32 @@ updateMessage(messageid:string, changes: Partial<Synchro>):Observable<any> {
 
 createMessage(newMessage: Partial<Synchro>, messageid:string) {
   console.log("createMessage",newMessage,messageid)
-    return this.afs.collection("synchro",
-            ref => ref.orderBy("seqNo", "desc").limit(1))
+    return this.afs.collection("synchro")
         .get()
         .pipe(
             concatMap(result => {
-console.log("inside createMessage2")
+                console.log("inside createMessage2")
+
+                let date_now = Date.now()
 
                 const messages = convertSnaps<Synchro>(result);
 
+                let lastCourseSeqNo = messages[0]?.seqNo ?? 0;
+                
+                if(newMessage.type == "set"){
+                  console.log("set?",newMessage.type)
+                  lastCourseSeqNo =  0;
 
-                const lastCourseSeqNo = messages[0]?.seqNo ?? 0;
+                  messages.map((item)=>{
+                    this.deleteMessage(item.id_firestore)
+                  })
+                }
+                
+
 
                 const message = {
                     ...newMessage,
-                    time: Date.now(),
+                    time: date_now,
                     seqNo: lastCourseSeqNo + 1,
                     id_firestore:messageid
                 }

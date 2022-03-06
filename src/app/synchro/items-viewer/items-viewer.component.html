@@ -1,0 +1,26 @@
+<mat-grid-list #grid cols="4" rowHeight="300px">
+    <mat-grid-tile *ngFor="let e of (items)">
+        <mat-card class="d-card">
+            <mat-card-title>{{e.auteur}}</mat-card-title>
+            <mat-card-subtitle>{{e.date}}</mat-card-subtitle>
+            <mat-card-subtitle>{{e.time}}</mat-card-subtitle>
+            <mat-card-content 
+                [style.font-size]="e.fontsize" 
+                style="max-width: 250px;overflow: auto">
+                <p *ngIf="e.type == 'set'">{{e.type}}</p>
+                <p *ngIf="e.message != ''">{{e.message}}</p>
+            </mat-card-content>
+           
+            
+
+        <mat-card-actions>
+            <button mat-mini-fab color="warn" (click)="delete2(e)">X</button>
+
+        </mat-card-actions>
+        </mat-card>
+    
+
+       
+    </mat-grid-tile>
+
+</mat-grid-list>

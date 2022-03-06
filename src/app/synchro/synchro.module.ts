@@ -12,12 +12,14 @@ import { RacineComponent } from './racine/racine.component';
 
 import {MatInputModule} from '@angular/material/input';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { ItemsViewerComponent } from './items-viewer/items-viewer.component';
 
 
 @NgModule({
   declarations: [
 
-    RacineComponent 
+    RacineComponent,
+     ItemsViewerComponent 
     
   ],
   imports: [

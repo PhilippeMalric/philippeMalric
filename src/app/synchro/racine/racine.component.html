@@ -1,6 +1,7 @@
 <header>
-    <button mat-raised-button color="warn" (click)="downloadFile()">Télécharger</button>
-    <button mat-raised-button color="warn" (click)="test.click()">Import</button>
+    <!--
+        <button mat-raised-button color="warn" (click)="downloadFile()">Télécharger</button>
+        <button mat-raised-button color="warn" (click)="test.click()">Import</button>
     
     <input 
     style="display:none;"
@@ -10,12 +11,8 @@
     #test
     (change)="uploadListener($event)" accept=".csv" 
     /> 
-    <mat-card class="home-card">
-        <mat-card-content>   
-            {{wait}} - {{diff}} - mili : {{mili}} - time_to_wait : {{time_to_wait}} - seconde : {{lastGameSeconde}}
-            <button mat-raised-button color="primary" [ngClass]="{'hide':wait}" (click)="add()">Go</button>
-        </mat-card-content>
-    </mat-card>
+    -->
+  
     <mat-card >
         <mat-card-content>  
     <div>{{lastTime}}</div> 
@@ -25,15 +22,7 @@
             <input matInput maxlength="256" placeholder="Ex. Ordinateur" [formControl]="message">
             <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
         </mat-form-field>-->
-        <p>
-            <button mat-raised-button color="primary" (click)="set()">set</button>
-        </p>
-        <mat-form-field class="number" appearance="fill">
-            
-            <mat-label>Seconde</mat-label>
-            <input class="number-input" matInput type="number"  placeholder="100" [formControl]="seconde" color="warn">
-            
-        </mat-form-field>
+      
     </form>
 </mat-card-content>
 <mat-card-actions>
@@ -48,33 +37,45 @@
  <h1>Le plus rapide gagne</h1>
 
         <div  class="buttonDiv1" style="max-width:10000px;">
+            <mat-tab-group animationDuration="0ms">
+                <mat-tab label="Principale">
+                    
+                            <button mat-raised-button color="primary" class="go" [ngClass]="{'hide':wait}" (click)="add()">Go</button>
+                          <div [ngClass]="{'hide':!iswinner}">
+                              <h1>Gagnant</h1>
+                              <p>{{winner}}</p>
+                              <p>{{time}}</p>
+                          </div>
 
-            <mat-grid-list #grid cols="4" rowHeight="300px">
-                <mat-grid-tile *ngFor="let e of (items)">
-                    <mat-card class="d-card">
-                        <mat-card-title>{{e.auteur}}</mat-card-title>
-                        <mat-card-subtitle>{{e.date}}</mat-card-subtitle>
-                        <mat-card-subtitle>{{e.time}}</mat-card-subtitle>
-                        <mat-card-content 
-                            [style.font-size]="e.fontsize" 
-                            style="max-width: 250px;overflow: auto">
-                            {{e.type}}
-                            <p>{{e.message}}</p>
-                        </mat-card-content>
-                       
-                        
-
-                    <mat-card-actions>
-                        <button mat-mini-fab color="warn" (click)="delete2(e)">X</button>
-
-                    </mat-card-actions>
-                    </mat-card>
+                </mat-tab>
                 
 
+                <mat-tab label="Cartes">
+                   <app-items-viewer [items]="items"></app-items-viewer>
+                </mat-tab>
+
+
+
+                <mat-tab label="Lancer">
+                    
+                    <p>
+                        <button mat-raised-button color="accent" (click)="set()">Lancer</button>
+                    </p>
                    
-                </mat-grid-tile>
-          
-            </mat-grid-list>
+                    <mat-slider
+                            [max]="10"
+                            [min]="2"
+                            [step]="1"
+                            [(ngModel)]="secondes">
+                    </mat-slider>
+                    <div class="example-label-container" >
+                        <label >Nombre de secondes</label>
+                        <br>
+                        <label class="example-value-label">{{secondes}}</label>
+                    </div>
+                </mat-tab>
+              </mat-tab-group>
+           
         
         
        

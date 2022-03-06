@@ -15,15 +15,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GoogleChartsModule } from 'angular-google-charts';
-
+import {MatTabsModule} from '@angular/material/tabs';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatSliderModule} from '@angular/material/slider';
 
 const components = [
   ShellComponent, DeleteButtonComponent
 ];
 
 const modules = [
+  MatSliderModule,
+  MatTabsModule,
   GoogleChartsModule,
   ReactiveFormsModule,
   MatGridListModule,

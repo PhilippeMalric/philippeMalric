@@ -18,28 +18,31 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
   styleUrls: ['./racine.component.scss']
 })
 export class RacineComponent implements OnInit {
+  secondes:number
   items: any
   id: string;
   lastGameSeconde : any
-  seconde = new FormControl('');
   message = new FormControl('');
   items2: Synchro[];
   
   @ViewChild('grid') grid: MatGridList; 
   
-  gridByBreakpoint = { xl: 8, lg: 6, md: 4, sm: 2, xs: 1 } 
   lastTime: number;
   wait: any;
   diff: number;
   mili: number;
   time_to_wait: number;
+  items3: any;
+  winner: any;
+  time: any;
+  iswinner: boolean;
 
   constructor(private synchroService:SynchroService,
               private afAuth: AngularFireAuth,
               private userService:UserService,
               private observableMedia:  MediaObserver
     ) {
-
+        this.secondes = 2
 
     
     
@@ -71,17 +74,33 @@ export class RacineComponent implements OnInit {
       this.items2 = this.items.filter((e:Synchro)=>{
         return e.type == "set"
       })
-
-      if( this.lastTime){
-       if(this.lastTime != this.items2[0].time){
-        this.lastTime = this.items2[0].time
-        this.checkNewGame()
-       }
-      }else{
-        this.lastTime = this.items2[0].time
-        this.checkNewGame()
+      console.log("time")
+      if(this.items2.length > 0){
+        if( this.lastTime ){
+          if(this.lastTime != this.items2[0].time){
+           this.lastTime = this.items2[0].time
+           this.checkNewGame()
+          }
+         }else{
+           this.lastTime = this.items2[0].time
+           this.checkNewGame()
+         }
       }
+
+      this.items3 = this.items.filter((e:Synchro)=>{
+        return e.type == "game"
+      }).sort((a,b)=>{
+        return a.message < b.message
+      })
       
+      if(this.items3.length > 0){
+        this.iswinner = true
+        this.winner = this.items3[0].auteur
+        this.time = this.items3[0].message
+      }else{
+        this.iswinner = false
+      }
+
 
       console.log("lastTime",this.items2,this.lastTime)
 
@@ -108,13 +127,7 @@ export class RacineComponent implements OnInit {
   } 
 
 
-   ngAfterContentInit() { 
-    this.observableMedia.asObservable().pipe(
-    tap(change => {
-      console.log(change);
-      this.grid.cols = this.gridByBreakpoint[change[0].mqAlias];
-    })).subscribe()
-  }
+  
 
   add(){
 
@@ -131,7 +144,7 @@ export class RacineComponent implements OnInit {
         {auteur:data,
           type:"game",
           message: ""+(Date.now() - (this.mili + this.lastTime )),
-          seconde:this.seconde.value,
+          seconde:this.secondes,
           date:today2
         },this.id).subscribe()
       
@@ -156,7 +169,7 @@ export class RacineComponent implements OnInit {
         {auteur:data,
           type:"set",
           message:this.message.value,
-          seconde:this.seconde.value,
+          seconde:this.secondes,
           date:today2
         },this.id).subscribe()
       
@@ -168,18 +181,6 @@ export class RacineComponent implements OnInit {
   }
 
 
-
-  delete(e:Synchro){
-
-    this.synchroService.deleteMessage(e.id_firestore).subscribe()
-
-  }
-
-  delete2(e:Synchro){
-
-    this.synchroService.falsedeleteMessage(e.id_firestore,e).subscribe()
-
-  }
 
   downloadFile() {
     let data = this.items
