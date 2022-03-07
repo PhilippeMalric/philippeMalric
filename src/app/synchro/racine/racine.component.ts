@@ -76,11 +76,13 @@ export class RacineComponent implements OnInit {
         return !e.deleted
       }).map((data)=>{
         let fontsize = "48px"
-        if(data['message'].length > 20){
-          fontsize = "24px"
-        }
-        if(data['message'].length > 40){
-          fontsize = "12px"
+        if("message" in Object.keys(data)){
+          if(data['message'].length > 20){
+            fontsize = "24px"
+          }
+          if(data['message'].length > 40){
+            fontsize = "12px"
+          }
         }
 
         data['fontsize']=fontsize
@@ -93,15 +95,14 @@ export class RacineComponent implements OnInit {
       console.log("time")
       if(this.items2.length > 0){
 
-
         this.userService.userName.pipe(take(1)).subscribe((data)=>{
+
+
           this.mySync = this.items.filter((e:Synchro)=>{
             return e.type == "sync" && e.auteur == data
           })
-
-
-
-          this.sync_launch = (this.mySync.length) > 0
+          console.log("mySync",this.mySync)
+          this.sync_launch = (this.mySync.length) == 0
           if(this.sync_launch){
             this.synchroService.createMessage(
               {auteur:data,
@@ -118,8 +119,8 @@ export class RacineComponent implements OnInit {
             this.max_time = Math.max(times)
             this.min_time = Math.min(times)
             this.diff_min_max = this.max_time - this.min_time
-
-            this.synchroService.my_diff_max = this.max_time - this.mySync.time
+            console.log("time",times,this.max_time,this.min_time,this.mySync[0].time)
+            this.synchroService.my_diff_max = this.max_time - this.mySync[0].time
             this.my_diff_max = this.synchroService.my_diff_max
 
           }
