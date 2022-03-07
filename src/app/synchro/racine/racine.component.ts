@@ -90,7 +90,7 @@ export class RacineComponent implements OnInit {
       this.items3 = this.items.filter((e:Synchro)=>{
         return e.type == "game"
       }).sort((a,b)=>{
-        return a.message < b.message
+        return (Number(a.message) < Number(b.message) ? -1 : 1) 
       })
       
       if(this.items3.length > 0){
@@ -100,7 +100,7 @@ export class RacineComponent implements OnInit {
       }else{
         this.iswinner = false
       }
-
+      console.log("items3",this.items3)
 
       console.log("lastTime",this.items2,this.lastTime)
 
