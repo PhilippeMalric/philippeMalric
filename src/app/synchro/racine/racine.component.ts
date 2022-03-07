@@ -105,7 +105,7 @@ export class RacineComponent implements OnInit {
           if(!this.sync_launch ){
 
 
-            if(this.items8.length == 0){// pour ne pas avoir de redo
+            if(this.items.length == 1){// pour ne pas avoir de redo
 
               console.log("sync",this.items)
               this.newid = this.synchroService.create_Id()
