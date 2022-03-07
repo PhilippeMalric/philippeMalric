@@ -116,8 +116,8 @@ export class RacineComponent implements OnInit {
               return e.type == "sync"
             }).map((e=>e.time))
 
-            this.max_time = Math.max(times)
-            this.min_time = Math.min(times)
+            this.max_time = Math.max(...times)
+            this.min_time = Math.min(...times)
             this.diff_min_max = this.max_time - this.min_time
             console.log("time",times,this.max_time,this.min_time,this.mySync[0].time)
             this.synchroService.my_diff_max = this.max_time - this.mySync[0].time

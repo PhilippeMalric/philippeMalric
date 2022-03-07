@@ -89,7 +89,8 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
                 let lastCourseSeqNo = messages[0]?.seqNo ?? 0;
 
                 if(newMessage.type == "set"){
-                  console.log("set?",newMessage.type)
+                  this.my_diff_max = undefined
+                  console.log("set?",newMessage.type,messages)
                   lastCourseSeqNo =  0;
 
                   messages.map((item)=>{
