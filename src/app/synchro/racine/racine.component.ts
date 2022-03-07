@@ -48,6 +48,8 @@ export class RacineComponent implements OnInit {
   my_diff_max: number;
   items5: any;
   items6: any;
+  items7: any;
+  items8: any;
 
 
   constructor(private synchroService:SynchroService,
@@ -83,6 +85,9 @@ export class RacineComponent implements OnInit {
       this.items2 = this.items.filter((e:Synchro)=>{
         return e.type == "set1"
       })
+      this.items8 = this.items.filter((e:Synchro)=>{
+        return e.type == "set"
+      })
       console.log("time")
 
       //devrait toujours passer ...
@@ -97,15 +102,21 @@ export class RacineComponent implements OnInit {
           console.log("mySync",this.mySync)
 
           this.sync_launch = (this.mySync.length) > 0
-          if(!this.sync_launch){
-            this.newid = this.synchroService.create_Id()
-            this.synchroService.createMessage(
-              { auteur:data,
-                type:"sync",
-                time: Date.now(),
-                seconde:this.secondes,
-                date:this.today2
-              },this.newid).subscribe()
+          if(!this.sync_launch ){
+
+
+            if(this.items8.length == 0){// pour ne pas avoir de redo
+
+              console.log("sync",this.items)
+              this.newid = this.synchroService.create_Id()
+              this.synchroService.createMessage(
+                      { auteur:data,
+                        type:"sync",
+                        time: Date.now(),
+                        seconde:this.secondes,
+                        date:this.today2
+                      },this.newid).subscribe()
+            }
           }else{
             let times = this.items.filter((e:Synchro)=>{
               return e.type == "sync"
@@ -122,10 +133,18 @@ export class RacineComponent implements OnInit {
             this.items5 = this.items.filter((e:Synchro)=>{
               return e.type == "set1" && e.auteur == data
             })
+            this.items7 = this.items.filter((e:Synchro)=>{
+              return e.type == "set" && e.auteur == data
+            })
 
-           if(this.items5.length > 0){
+           if(this.items5.length > 0 && (!(this.items7.length > 0))){
+
+              console.log(this.items)
+              console.log("items5",this.items5)
+              console.log("items7", this.items7)
+              console.log("sync",this.items)
             this.newid = this.synchroService.create_Id()
-            this.synchroService.createMessage(
+           this.synchroService.createMessage(
               {auteur:data,
                 type:"set",
                 message:this.message.value,
@@ -140,16 +159,18 @@ export class RacineComponent implements OnInit {
         this.items6 = this.items.filter((e:Synchro)=>{
           return e.type == "set"
         })
+        if(this.items6.length > 0){
+          if( this.lastTime ){
+            if(this.lastTime != this.items6[0].time){
+             this.lastTime = this.items6[0].time
+             this.checkNewGame()
+            }
+           }else{
+             this.lastTime = this.items6[0].time
+             this.checkNewGame()
+           }
+        }
 
-        if( this.lastTime ){
-          if(this.lastTime != this.items6[0].time){
-           this.lastTime = this.items6[0].time
-           this.checkNewGame()
-          }
-         }else{
-           this.lastTime = this.items6[0].time
-           this.checkNewGame()
-         }
       }
 
       this.items3 = this.items.filter((e:Synchro)=>{
@@ -215,18 +236,13 @@ export class RacineComponent implements OnInit {
     this.newid = this.synchroService.create_Id()
     this.userService.userName.pipe(take(1)).subscribe((data)=>{
       console.log(data)
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-      var yyyy = today.getFullYear();
-
-      let today2 = yyyy  + '-' + mm + '-' + dd;
+      console.log("add")
       this.synchroService.createMessage(
         {auteur:data,
           type:"game",
-          message: ""+(Date.now() - (this.mili + this.lastTime )),
+          message: ""+(this.synchroService.get_time() - (this.mili + this.lastTime )),
           seconde:this.secondes,
-          date:today2
+          date:this.today2
         },this.newid).subscribe()
 
     })
@@ -240,7 +256,7 @@ export class RacineComponent implements OnInit {
     this.newid = this.synchroService.create_Id()
     this.userService.userName.pipe(take(1)).subscribe((data)=>{
       console.log(data)
-
+      console.log("set")
       this.synchroService.createMessage(
         {auteur:data,
           type:"set1",
