@@ -24,9 +24,9 @@ export class RacineComponent implements OnInit {
   lastGameSeconde : any
   message = new FormControl('');
   items2: Synchro[];
-  
-  @ViewChild('grid') grid: MatGridList; 
-  
+
+  @ViewChild('grid') grid: MatGridList;
+
   lastTime: number;
   wait: any;
   diff: number;
@@ -44,8 +44,8 @@ export class RacineComponent implements OnInit {
     ) {
         this.secondes = 2
 
-    
-    
+
+
    }
 
   ngOnInit(): void {
@@ -90,16 +90,16 @@ export class RacineComponent implements OnInit {
       this.items3 = this.items.filter((e:Synchro)=>{
         return e.type == "game"
       }).sort((a,b)=>{
-        return (Number(a.message) < Number(b.message) ? -1 : 1) 
+        return (Number(a.message) < Number(b.message) ? -1 : 1)
       })
-      
+
       if(this.items3.length > 0){
         setTimeout(()=>{
 
           this.iswinner = true
 
         },5000)
-        
+
         this.winner = this.items3[0].auteur
         this.time = this.items3[0].message
       }else{
@@ -115,24 +115,27 @@ export class RacineComponent implements OnInit {
   }
 
   checkNewGame = ()=>{
-    let now2 = Date.now() 
+    let now2 = Date.now()
     this.diff = now2 - this.lastTime
     this.mili = this.items2[0].seconde * 1000
     this.lastGameSeconde = this.items2[0].seconde
+
+    console.log("Time to get set",this.diff )
+
     if(this.diff < (this.mili) ){
       this.time_to_wait = (Number(this.lastGameSeconde) * 1000) - this.diff
       this.wait = true
       setTimeout(() => {
         this.wait =  false
       }, this.time_to_wait)
-      
-      
+
+
     }else{this.wait =  false}
 
-  } 
+  }
 
 
-  
+
 
   add(){
 
@@ -152,7 +155,7 @@ export class RacineComponent implements OnInit {
           seconde:this.secondes,
           date:today2
         },this.id).subscribe()
-      
+
     })
 
 
@@ -177,7 +180,7 @@ export class RacineComponent implements OnInit {
           seconde:this.secondes,
           date:today2
         },this.id).subscribe()
-      
+
     })
 
 
@@ -206,7 +209,7 @@ export class RacineComponent implements OnInit {
 
       var blob = new Blob([csvArray], {type: 'text/csv' })
       saveAs.saveAs(blob, "myFile.csv");
-  
+
   }
 
 
@@ -217,13 +220,13 @@ export class RacineComponent implements OnInit {
   }
 
   importFile($event: any) {
-    
+
     // Select the files from the event
     const files = $event.srcElement.files;
-  
+
     console.log(files);
     if(files && files.length > 0) {
-      let file : File = files.item(0); 
+      let file : File = files.item(0);
         console.log(file.name);
         console.log(file.size);
         console.log(file.type);
@@ -243,16 +246,16 @@ export class RacineComponent implements OnInit {
               if(!newObj["date"]){
                 newObj["date"] = "202?-??-??"
               }
-              
+
               newObj["deleted"] = false
               newObj["id_firestore"] = this.id
               this.synchroService.createMessage(
                 newObj,this.id).subscribe()
               newArray.push(newObj)
             }
-            
+
             console.log(newArray)
-            
+
 
         }
       }
