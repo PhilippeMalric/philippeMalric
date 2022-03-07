@@ -18,9 +18,10 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
   styleUrls: ['./racine.component.scss']
 })
 export class RacineComponent implements OnInit {
+
   secondes:number
-  items: any
-  id: string;
+  items: any;
+  newid: string;
   lastGameSeconde : any
   message = new FormControl('');
   items2: Synchro[];
@@ -36,6 +37,16 @@ export class RacineComponent implements OnInit {
   winner: any;
   time: any;
   iswinner: boolean;
+  items4: any;
+  today2: string;
+  sync_launch: any;
+  mySync: any;
+  max_time: number;
+  min_time: number;
+  diff_min_max: number;
+  id: string;
+  my_diff_max: number;
+
 
   constructor(private synchroService:SynchroService,
               private afAuth: AngularFireAuth,
@@ -43,14 +54,19 @@ export class RacineComponent implements OnInit {
               private observableMedia:  MediaObserver
     ) {
         this.secondes = 2
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
 
+        this.today2 = yyyy  + '-' + mm + '-' + dd;
 
-
+        this.sync_launch = false
    }
 
   ngOnInit(): void {
 
-    this.id = this.synchroService.create_Id()
+    this.newid = this.synchroService.create_Id()
     this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
       console.log("data")
       console.log(data)
@@ -76,6 +92,40 @@ export class RacineComponent implements OnInit {
       })
       console.log("time")
       if(this.items2.length > 0){
+
+
+        this.userService.userName.pipe(take(1)).subscribe((data)=>{
+          this.mySync = this.items.filter((e:Synchro)=>{
+            return e.type == "sync" && e.auteur == data
+          })
+
+
+
+          this.sync_launch = (this.mySync.length) > 0
+          if(this.sync_launch){
+            this.synchroService.createMessage(
+              {auteur:data,
+                type:"sync",
+                time: Date.now(),
+                seconde:this.secondes,
+                date:this.today2
+              },this.newid).subscribe()
+          }else{
+            let times = this.items.filter((e:Synchro)=>{
+              return e.type == "sync"
+            }).map((e=>e.time))
+
+            this.max_time = Math.max(times)
+            this.min_time = Math.min(times)
+            this.diff_min_max = this.max_time - this.min_time
+
+            this.synchroService.my_diff_max = this.max_time - this.mySync.time
+            this.my_diff_max = this.synchroService.my_diff_max
+
+          }
+        })
+
+
         if( this.lastTime ){
           if(this.lastTime != this.items2[0].time){
            this.lastTime = this.items2[0].time
@@ -110,12 +160,20 @@ export class RacineComponent implements OnInit {
       console.log("lastTime",this.items2,this.lastTime)
 
 
+      this.items4 = this.items.filter((e:Synchro)=>{
+        return e.type == "sync"
+      }).sort((a,b)=>{
+        return (Number(a.message) < Number(b.message) ? -1 : 1)
+      })
+
     }
       )
   }
 
+
+
   checkNewGame = ()=>{
-    let now2 = Date.now()
+    let now2 = this.synchroService.get_time()
     this.diff = now2 - this.lastTime
     this.mili = this.items2[0].seconde * 1000
     this.lastGameSeconde = this.items2[0].seconde

@@ -14,7 +14,7 @@ export interface Synchro  {
   seconde:number,
   deleted:boolean,
   date:string
-} 
+}
 
 function convertSnaps<T>(results)  {
   return <T[]> results.docs.map(snap => {
@@ -32,19 +32,21 @@ function convertSnaps<T>(results)  {
 export class SynchroService {
   itemCollection: any;
   items$: any;
+  my_diff_max: number;
 
-  constructor(private afs: AngularFirestore) { 
- 
+
+  constructor(private afs: AngularFirestore) {
+
     this.getItems()
 
   }
 
-  
+
   getItems = ():any=>{
 
     return this.afs.collection("synchro")
             .valueChanges()
-            
+
 
 
   }
@@ -54,7 +56,7 @@ export class SynchroService {
     return this.afs.createId()
   }
 
-  
+
 
 
   deleteMessage(messageid:string) {
@@ -80,12 +82,12 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
             concatMap(result => {
                 console.log("inside createMessage2")
 
-                let date_now = Date.now()
+                let date_now = this.get_time()
 
                 const messages = convertSnaps<Synchro>(result);
 
                 let lastCourseSeqNo = messages[0]?.seqNo ?? 0;
-                
+
                 if(newMessage.type == "set"){
                   console.log("set?",newMessage.type)
                   lastCourseSeqNo =  0;
@@ -94,7 +96,7 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
                     this.deleteMessage(item.id_firestore)
                   })
                 }
-                
+
 
 
                 const message = {
@@ -103,7 +105,7 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
                     seqNo: lastCourseSeqNo + 1,
                     id_firestore:messageid
                 }
-                
+
                 console.log(message)
 
                 let save$: Observable<any>;
@@ -124,6 +126,14 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
             })
         )
 }
+get_time(){
 
+  if(this.my_diff_max){
+    return( Date.now() + this.my_diff_max)
+  }else{
+    return(Date.now())
+  }
+
+}
 
 }
