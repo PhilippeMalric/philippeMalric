@@ -94,7 +94,12 @@ export class RacineComponent implements OnInit {
       })
       
       if(this.items3.length > 0){
-        this.iswinner = true
+        setTimeout(()=>{
+
+          this.iswinner = true
+
+        },5000)
+        
         this.winner = this.items3[0].auteur
         this.time = this.items3[0].message
       }else{
