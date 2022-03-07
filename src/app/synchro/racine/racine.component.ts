@@ -46,6 +46,8 @@ export class RacineComponent implements OnInit {
   diff_min_max: number;
   id: string;
   my_diff_max: number;
+  items5: any;
+  items6: any;
 
 
   constructor(private synchroService:SynchroService,
@@ -64,6 +66,8 @@ export class RacineComponent implements OnInit {
         this.sync_launch = false
    }
 
+
+
   ngOnInit(): void {
 
     this.newid = this.synchroService.create_Id()
@@ -74,38 +78,29 @@ export class RacineComponent implements OnInit {
       //this.items2 = data
       this.items = data2.filter((e:any)=>{
         return !e.deleted
-      }).map((data)=>{
-        let fontsize = "48px"
-        if("message" in Object.keys(data)){
-          if(data['message'].length > 20){
-            fontsize = "24px"
-          }
-          if(data['message'].length > 40){
-            fontsize = "12px"
-          }
-        }
-
-        data['fontsize']=fontsize
-        return data
-      })
+      }).map(this.changeFont_size)
 
       this.items2 = this.items.filter((e:Synchro)=>{
-        return e.type == "set"
+        return e.type == "set1"
       })
       console.log("time")
+
+      //devrait toujours passer ...
+
       if(this.items2.length > 0){
 
         this.userService.userName.pipe(take(1)).subscribe((data)=>{
-
-
+          //obtenir mon sync si présent
           this.mySync = this.items.filter((e:Synchro)=>{
             return e.type == "sync" && e.auteur == data
           })
           console.log("mySync",this.mySync)
-          this.sync_launch = (this.mySync.length) == 0
-          if(this.sync_launch){
+
+          this.sync_launch = (this.mySync.length) > 0
+          if(!this.sync_launch){
+            this.newid = this.synchroService.create_Id()
             this.synchroService.createMessage(
-              {auteur:data,
+              { auteur:data,
                 type:"sync",
                 time: Date.now(),
                 seconde:this.secondes,
@@ -123,17 +118,36 @@ export class RacineComponent implements OnInit {
             this.synchroService.my_diff_max = this.max_time - this.mySync[0].time
             this.my_diff_max = this.synchroService.my_diff_max
 
+
+            this.items5 = this.items.filter((e:Synchro)=>{
+              return e.type == "set1" && e.auteur == data
+            })
+
+           if(this.items5.length > 0){
+            this.newid = this.synchroService.create_Id()
+            this.synchroService.createMessage(
+              {auteur:data,
+                type:"set",
+                message:this.message.value,
+                seconde:this.secondes,
+                date:this.today2
+              },this.newid).subscribe()
+           }
+
           }
         })
 
+        this.items6 = this.items.filter((e:Synchro)=>{
+          return e.type == "set"
+        })
 
         if( this.lastTime ){
-          if(this.lastTime != this.items2[0].time){
-           this.lastTime = this.items2[0].time
+          if(this.lastTime != this.items6[0].time){
+           this.lastTime = this.items6[0].time
            this.checkNewGame()
           }
          }else{
-           this.lastTime = this.items2[0].time
+           this.lastTime = this.items6[0].time
            this.checkNewGame()
          }
       }
@@ -149,17 +163,17 @@ export class RacineComponent implements OnInit {
 
           this.iswinner = true
 
-        },5000)
+        },2000)
 
         this.winner = this.items3[0].auteur
         this.time = this.items3[0].message
       }else{
         this.iswinner = false
       }
+
       console.log("items3",this.items3)
 
       console.log("lastTime",this.items2,this.lastTime)
-
 
       this.items4 = this.items.filter((e:Synchro)=>{
         return e.type == "sync"
@@ -198,7 +212,7 @@ export class RacineComponent implements OnInit {
 
   add(){
 
-    this.id = this.synchroService.create_Id()
+    this.newid = this.synchroService.create_Id()
     this.userService.userName.pipe(take(1)).subscribe((data)=>{
       console.log(data)
       var today = new Date();
@@ -213,7 +227,7 @@ export class RacineComponent implements OnInit {
           message: ""+(Date.now() - (this.mili + this.lastTime )),
           seconde:this.secondes,
           date:today2
-        },this.id).subscribe()
+        },this.newid).subscribe()
 
     })
 
@@ -223,22 +237,17 @@ export class RacineComponent implements OnInit {
   }
   set(){
 
-    this.id = this.synchroService.create_Id()
+    this.newid = this.synchroService.create_Id()
     this.userService.userName.pipe(take(1)).subscribe((data)=>{
       console.log(data)
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-      var yyyy = today.getFullYear();
 
-      let today2 = yyyy  + '-' + mm + '-' + dd;
       this.synchroService.createMessage(
         {auteur:data,
-          type:"set",
+          type:"set1",
           message:this.message.value,
           seconde:this.secondes,
-          date:today2
-        },this.id).subscribe()
+          date:this.today2
+        },this.newid).subscribe()
 
     })
 
@@ -406,5 +415,18 @@ export class RacineComponent implements OnInit {
     // Return the parsed data.
     return( arrData );
   }
+  changeFont_size = (data)=>{
+    let fontsize = "48px"
+    if("message" in Object.keys(data)){
+      if(data['message'].length > 20){
+        fontsize = "24px"
+      }
+      if(data['message'].length > 40){
+        fontsize = "12px"
+      }
+    }
 
+    data['fontsize']=fontsize
+    return data
+  }
 }
