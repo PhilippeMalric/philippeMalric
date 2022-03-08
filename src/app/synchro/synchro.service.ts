@@ -130,7 +130,7 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
 get_time(){
 
   if(this.my_diff_max){
-    return( Date.now() + this.my_diff_max)
+    return( Date.now() - this.my_diff_max)
   }else{
     return(Date.now())
   }
