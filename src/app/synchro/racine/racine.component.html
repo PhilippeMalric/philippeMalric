@@ -18,34 +18,18 @@
     liste modifiable avec auteur
 
 -->
- <h1>Le plus rapide gagne 2</h1>
+ <h1>Le plus rapide gagne 3</h1>
 
         <div  class="buttonDiv1" style="max-width:10000px;">
             <mat-tab-group animationDuration="0ms">
                 <mat-tab label="Principale">
 
                             <button mat-raised-button color="primary" class="go" [ngClass]="{'hide':wait}" (click)="add()">Go</button>
+                            <p>
+                              <button mat-raised-button color="warn" class="go" [ngClass]="{'hide':wait}" (click)="deleteAll()">DeleteAll</button>
+                            </p>
 
-                          <p>
-                            delais : {{diff}}
-                          </p>
-                          <p>
-                            min : {{min_time}}
-                          </p>
-                          <p>
-                            max : {{max_time}}
-                          </p>
-                          <p>
-                            diff_min_max : {{diff_min_max}}
-                          </p>
-                          <p>
-                            my_diff_max : {{my_diff_max}}
-                          </p>
-                          <div [ngClass]="{'hide':!iswinner}">
-                              <h1>Gagnant</h1>
-                              <p>{{winner}}</p>
-                              <p>{{time}}</p>
-                          </div>
+
 
                 </mat-tab>
 

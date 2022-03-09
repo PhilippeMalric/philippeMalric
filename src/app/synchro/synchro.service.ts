@@ -76,11 +76,11 @@ updateMessage(messageid:string, changes: Partial<Synchro>):Observable<any> {
 
 createMessage(newMessage: Partial<Synchro>, messageid:string) {
   console.log("createMessage",newMessage,messageid)
-    return this.afs.collection("synchro")
+    return this.afs.collection("synchro", ref => ref.orderBy("seqNo", "desc"))
         .get()
         .pipe(
             concatMap(result => {
-                console.log("inside createMessage2")
+                console.log("inside ping")
 
 
 
@@ -88,17 +88,15 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
 
                 let lastCourseSeqNo = messages[0]?.seqNo ?? 0;
 
-                if(newMessage.type == "set1"){
-                  this.my_diff_max = undefined
-                  console.log("set?",newMessage.type,messages)
+                if(newMessage.type == "ping1"){
+
+                  console.log("ping1")
                   lastCourseSeqNo =  0;
 
-                  messages.map((item)=>{
-                    this.deleteMessage(item.id_firestore)
-                  })
+
                 }
 
-                let date_now = this.get_time()
+                let date_now = Date.now()
 
                 const message = {
                     ...newMessage,
@@ -130,7 +128,7 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
 get_time(){
 
   if(this.my_diff_max){
-    return( Date.now() - this.my_diff_max)
+    return( Date.now() + this.my_diff_max)
   }else{
     return(Date.now())
   }

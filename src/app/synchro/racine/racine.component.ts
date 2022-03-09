@@ -36,20 +36,10 @@ export class RacineComponent implements OnInit {
   items3: any;
   winner: any;
   time: any;
-  iswinner: boolean;
-  items4: any;
   today2: string;
-  sync_launch: any;
-  mySync: any;
-  max_time: number;
-  min_time: number;
-  diff_min_max: number;
-  id: string;
-  my_diff_max: number;
-  items5: any;
-  items6: any;
-  items7: any;
-  items8: any;
+  ping1_sent: boolean;
+  ping1_items: any;
+  response_ping1_items: any;
 
 
   constructor(private synchroService:SynchroService,
@@ -65,7 +55,6 @@ export class RacineComponent implements OnInit {
 
         this.today2 = yyyy  + '-' + mm + '-' + dd;
 
-        this.sync_launch = false
    }
 
 
@@ -76,158 +65,59 @@ export class RacineComponent implements OnInit {
     this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
       console.log("data")
       console.log(data)
-      let data2 = data.sort(this.compareNombres)
-      //this.items2 = data
-      this.items = data2.filter((e:any)=>{
-        return !e.deleted
-      }).map(this.changeFont_size)
-
-      this.items2 = this.items.filter((e:Synchro)=>{
-        return e.type == "set1"
-      })
-      this.items8 = this.items.filter((e:Synchro)=>{
-        return e.type == "set"
-      })
-      console.log("time")
-
-      //devrait toujours passer ...
-
-      if(this.items2.length > 0){
-
-        this.userService.userName.pipe(take(1)).subscribe((data)=>{
-          //obtenir mon sync si présent
-          this.mySync = this.items.filter((e:Synchro)=>{
-            return e.type == "sync" && e.auteur == data
+      this.items = data
+      if(this.items.length == 0){
+        this.ping1_sent = false
+      }else{
+       this.ping1_items = this.items.filter((data)=>{
+          return data.type == "ping1"
+        })
+        console.log(this.ping1_sent,this.ping1_items.length > 0)
+        if( this.ping1_items.length > 0){
+          this.response_ping1_items = this.items.filter((data)=>{
+            return data.type == "response_to_ping1"
           })
-          console.log("mySync",this.mySync)
-
-          this.sync_launch = (this.mySync.length) > 0
-          if(!this.sync_launch ){
-
-
-            if(this.items.length == 1){// pour ne pas avoir de redo
-
-              console.log("sync",this.items)
-              this.newid = this.synchroService.create_Id()
-              this.synchroService.createMessage(
-                      { auteur:data,
-                        type:"sync",
-                        time: Date.now(),
-                        seconde:this.secondes,
-                        date:this.today2
-                      },this.newid).subscribe()
-            }
+          if(this.ping1_sent && this.response_ping1_items.length > 0){
+            let diff =    this.response_ping1_items[0].time - this.ping1_items[0].time
+            console.log("diff",diff)
           }else{
-            let times = this.items.filter((e:Synchro)=>{
-              return e.type == "sync"
-            }).map((e=>e.time))
-
-            this.max_time = Math.max(...times)
-            this.min_time = Math.min(...times)
-            this.diff_min_max = this.max_time - this.min_time
-            console.log("time",times,this.max_time,this.min_time,this.mySync[0].time)
-            this.synchroService.my_diff_max = this.max_time - this.mySync[0].time
-            this.my_diff_max = this.synchroService.my_diff_max
-
-
-            this.items5 = this.items.filter((e:Synchro)=>{
-              return e.type == "set1" && e.auteur == data
-            })
-            this.items7 = this.items.filter((e:Synchro)=>{
-              return e.type == "set" && e.auteur == data
-            })
-
-           if(this.items5.length > 0 && (!(this.items7.length > 0))){
-
-              console.log(this.items)
-              console.log("items5",this.items5)
-              console.log("items7", this.items7)
-              console.log("sync",this.items)
             this.newid = this.synchroService.create_Id()
-           this.synchroService.createMessage(
-              {auteur:data,
-                type:"set",
-                message:this.message.value,
+            this.userService.userName.pipe(take(1)).subscribe((auteur)=>{
+
+            this.synchroService.createMessage(
+              {auteur:auteur,
+                type:"response_to_ping1",
+                message: ""+ Date.now(),
                 seconde:this.secondes,
                 date:this.today2
               },this.newid).subscribe()
-           }
 
+
+
+            })
+            this.ping1_sent = true
           }
-        })
 
-        this.items6 = this.items.filter((e:Synchro)=>{
-          return e.type == "set"
-        })
-        if(this.items6.length > 0){
-          if( this.lastTime ){
-            if(this.lastTime != this.items6[0].time){
-             this.lastTime = this.items6[0].time
-             this.checkNewGame()
-            }
-           }else{
-             this.lastTime = this.items6[0].time
-             this.checkNewGame()
-           }
         }
 
+
+
       }
 
-      this.items3 = this.items.filter((e:Synchro)=>{
-        return e.type == "game"
-      }).sort((a,b)=>{
-        return (Number(a.message) < Number(b.message) ? -1 : 1)
-      })
 
-      if(this.items3.length > 0){
-        setTimeout(()=>{
 
-          this.iswinner = true
-
-        },2000)
-
-        this.winner = this.items3[0].auteur
-        this.time = this.items3[0].message
-      }else{
-        this.iswinner = false
-      }
-
-      console.log("items3",this.items3)
-
-      console.log("lastTime",this.items2,this.lastTime)
-
-      this.items4 = this.items.filter((e:Synchro)=>{
-        return e.type == "sync"
-      }).sort((a,b)=>{
-        return (Number(a.message) < Number(b.message) ? -1 : 1)
-      })
-
-    }
-      )
+    })
   }
 
 
 
-  checkNewGame = ()=>{
-    let now2 = this.synchroService.get_time()
-    this.diff = now2 - this.lastTime
-    this.mili = this.items2[0].seconde * 1000
-    this.lastGameSeconde = this.items2[0].seconde
+ deleteAll = ()=>{
 
-    console.log("Time to get set",this.diff )
+  this.items.map((item)=>{
+    this.synchroService.deleteMessage(item.id_firestore)
+  })
 
-    if(this.diff < (this.mili) ){
-      this.time_to_wait = (Number(this.lastGameSeconde) * 1000) - this.diff
-      this.wait = true
-      setTimeout(() => {
-        this.wait =  false
-      }, this.time_to_wait)
-
-
-    }else{this.wait =  false}
-
-  }
-
+ }
 
 
 
@@ -240,7 +130,7 @@ export class RacineComponent implements OnInit {
       this.synchroService.createMessage(
         {auteur:data,
           type:"game",
-          message: ""+(this.synchroService.get_time() - (this.mili + this.lastTime )),
+          message: ""+ Date.now(),
           seconde:this.secondes,
           date:this.today2
         },this.newid).subscribe()
@@ -259,8 +149,8 @@ export class RacineComponent implements OnInit {
       console.log("set")
       this.synchroService.createMessage(
         {auteur:data,
-          type:"set1",
-          message:this.message.value,
+          type:"ping1",
+          message:""+ Date.now(),
           seconde:this.secondes,
           date:this.today2
         },this.newid).subscribe()
@@ -322,7 +212,7 @@ export class RacineComponent implements OnInit {
             console.log(array_imported);
             let newArray = []
             for(let e of array_imported.slice(1,array_imported.length)){
-              this.id = this.synchroService.create_Id()
+              this.newid = this.synchroService.create_Id()
               let newObj = {}
               for(let i in e){
                 newObj[array_imported[0][i]] = e[i]
@@ -332,9 +222,9 @@ export class RacineComponent implements OnInit {
               }
 
               newObj["deleted"] = false
-              newObj["id_firestore"] = this.id
+              newObj["id_firestore"] = this.newid
               this.synchroService.createMessage(
-                newObj,this.id).subscribe()
+                newObj,this.newid).subscribe()
               newArray.push(newObj)
             }
 
