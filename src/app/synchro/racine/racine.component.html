@@ -25,10 +25,30 @@
                 <mat-tab label="Principale">
 
                             <button mat-raised-button color="primary" class="go" [ngClass]="{'hide':wait}" (click)="add()">Go</button>
-                            <p>
-                              <button mat-raised-button color="warn" class="go" [ngClass]="{'hide':wait}" (click)="deleteAll()">DeleteAll</button>
+
+                            <h2>Présents : </h2>
+                            <p *ngFor="let auteurs of auteurs">
+
+                              {{auteurs}}
+
                             </p>
 
+                            <h2>Différence entre les pings (local): </h2>
+                            <div *ngFor="let diff of diffBy_auteur">
+
+                             <p>
+                              Auteur : {{diff.auteur}}, moyenne : {{diff.mean}}
+                             </p>
+
+                            </div>
+                            <h2>Ping 3 time Diff  : </h2>
+                            <p>
+                              {{pings3_diff_time}}
+                            </p>
+                            <h2>Ping 10 time Diff  : </h2>
+                            <p>
+                              {{pings10_diff_time}}
+                            </p>
 
 
                 </mat-tab>
@@ -37,7 +57,9 @@
                 <mat-tab label="Cartes">
                    <app-items-viewer [items]="items"></app-items-viewer>
                 </mat-tab>
-
+                <mat-tab label="Cartes balancées">
+                  <app-items-viewer [items]="itemsB"></app-items-viewer>
+               </mat-tab>
 
 
                 <mat-tab label="Lancer">
@@ -45,7 +67,9 @@
                     <p>
                         <button mat-raised-button color="accent" (click)="set()">Lancer</button>
                     </p>
-
+                    <p>
+                      <button mat-raised-button color="warn" class="go" [ngClass]="{'hide':wait}" (click)="deleteAll()">DeleteAll</button>
+                    </p>
                     <mat-slider
                             [max]="10"
                             [min]="2"

@@ -11,6 +11,7 @@ import { SynchroService,  Synchro } from '../synchro.service';
 import * as saveAs from 'file-saver';
 import { MatGridList } from '@angular/material/grid-list';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
+import { merge } from 'd3';
 
 @Component({
   selector: 'app-racine',
@@ -45,6 +46,16 @@ export class RacineComponent implements OnInit {
   pingx_items: any;
   pingx2_items: any;
   auteur: string;
+  auteurs: any;
+  itemsReelDiff: any;
+  diffBy_auteur: any;
+  offsetBy_auteur: any;
+  itemsB: any;
+  pings3: any;
+  pings3_diff_time: number;
+  pings10: any;
+  pings10_diff_time: number;
+  array_time_diff: number[];
 
 
   constructor(private synchroService:SynchroService,
@@ -67,7 +78,8 @@ export class RacineComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+    this.pings3_diff_time = 0
+    this.pings3 = []
     this.compteur = 0
     this.n = 10
     this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
@@ -79,6 +91,7 @@ export class RacineComponent implements OnInit {
 
       if(this.items.length == 0){
         this.compteur = 0
+        this.itemsB = []
       }
 
 
@@ -89,8 +102,15 @@ export class RacineComponent implements OnInit {
         console.log((boot_condition || after_boot_condition),boot_condition,after_boot_condition)
         return (boot_condition || after_boot_condition)
       })
+
+      this.pingx2_items = this.items.filter((data)=>{
+        return  data.type == ("ping"+(this.compteur + 2)) && data.auteur == this.auteur
+      })
+
+     console.log("pingx2_items", this.pingx2_items)
+
       console.log("pingx_items",this.pingx_items)
-      if( this.pingx_items.length > 0){
+      if( this.pingx_items.length > 0 && !(this.pingx2_items.length > 0)){
         this.compteur += 1
 
         if(this.compteur < this.n){
@@ -109,7 +129,111 @@ export class RacineComponent implements OnInit {
         }
       }
 
+      console.log("ok : auteur")
+      this.auteurs = this.items.map((data:Synchro)=>{
 
+        return data.auteur
+
+
+      }).filter(this.onlyUnique);
+
+      console.log("ok : itemsReelDiff")
+
+      this.itemsReelDiff = this.items.filter((data:Synchro)=>{
+        return data.type != "ping1" && data.type != "ping2"
+      })
+
+      this.diffBy_auteur = this.auteurs.map((auteur)=>{
+
+        let tab = this.itemsReelDiff.filter((data:Synchro)=>{
+
+          return data.auteur == auteur
+
+        }).map((data:Synchro)=>{
+          return Number(data.message)
+        })
+
+        let sum = tab.reduce((a, b) => a + b, 0)
+
+        return {mean:(sum / tab.length) || 0, auteur};
+      })
+
+      let tabPing2 = this.items.filter((data:Synchro)=>{
+        return data.type == "ping2"
+      })
+
+      console.log("ok : tabPing2")
+
+
+      console.log(this.auteurs,tabPing2)
+
+      if(this.auteurs.length == tabPing2.length && this.items.length > 1){
+
+        console.log("auteurs",this.auteurs)
+
+        this.offsetBy_auteur = this.auteurs.map((auteur)=>{
+
+          let tab = this.items.filter((data:Synchro)=>{
+            return data.type == "ping2" && data.auteur == auteur
+          })
+          return {auteur,offset:Number(tab[0].message)-100}
+        })
+
+        console.log("ok : offsetBy_auteur",this.offsetBy_auteur)
+
+        let itemsB_by_auteur = this.auteurs.map((auteur)=>{
+          let itemsReelDiff_by_auteur_balanced = this.itemsReelDiff.filter(data=>{
+
+              return data.auteur == auteur
+
+            }).map(data=>{
+              let offset_current_auteur = this.offsetBy_auteur.filter((data2:Synchro)=>{
+                return data2.auteur == auteur
+              })
+              console.log(offset_current_auteur)
+              let currentOffset = offset_current_auteur[0].offset
+              console.log("ok : currentOffset",currentOffset)
+              let time_balanced = (Number(data.time) - currentOffset)
+              console.log(data,data.message,currentOffset,time_balanced)
+              data.time = time_balanced
+              return data
+
+          })
+          return itemsReelDiff_by_auteur_balanced
+        })
+
+        console.log("ok : itemsB_by_auteur",itemsB_by_auteur)
+        this.itemsB = [].concat.apply([], itemsB_by_auteur).sort((a,b)=>{return (a.time - b.time)});
+        console.log("ok : itemsB",this.itemsB )
+
+        if(this.itemsB.length > 15){
+
+          this.array_time_diff = [...Array(7).keys()].map(n=>{
+
+            let tab = this.itemsB.filter(data2=>{
+              return data2.type == "ping"+(n+3)
+            })
+            console.log((n+3),tab)
+            return tab[0].time - tab[1].time
+          })
+          console.log("array_time_diff",this.array_time_diff)
+
+          this.pings3 = this.itemsB.filter((data)=>{
+            return data.type == "ping3"
+          })
+          if(this.pings3.length > 1){
+            this.pings3_diff_time =  this.pings3[0].time - this.pings3[1].time
+          }
+          this.pings10 = this.itemsB.filter((data)=>{
+            return data.type == "ping10"
+          })
+          if(this.pings10.length > 1){
+            this.pings10_diff_time =  this.pings10[0].time - this.pings10[1].time
+          }
+        }
+
+
+      }
 
     })
 
@@ -156,7 +280,9 @@ export class RacineComponent implements OnInit {
     }) */
   }
 
-
+  onlyUnique = function(value, index, self) {
+    return self.indexOf(value) === index;
+  }
 
  deleteAll = ()=>{
   this.compteur = 0
