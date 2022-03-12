@@ -77,7 +77,11 @@ export class RacineComponent implements OnInit {
       console.log("compteur",this.compteur)
       console.log("ping"+(this.compteur + 1))
       this.pingx_items = this.items.filter((data)=>{
-        return data.type == ("ping"+(this.compteur + 1)) && data.auteur == this.auteur
+
+        let boot_condition = this.compteur == 0 && data.type == "ping1"
+        let after_boot_condition = data.type == ("ping"+(this.compteur + 1)) && data.auteur == this.auteur
+
+        return boot_condition || after_boot_condition
       })
       console.log("pingx_items",this.pingx_items)
       if( this.pingx_items.length > 0){
@@ -97,7 +101,12 @@ export class RacineComponent implements OnInit {
               },this.newid).subscribe()
 
         }
+      }else{
+        this.compteur = 0
       }
+
+
+
     })
 
 
