@@ -59,7 +59,7 @@ export class RacineComponent implements OnInit {
         var yyyy = today.getFullYear();
 
         this.today2 = yyyy  + '-' + mm + '-' + dd;
-        this.userService.userName.pipe(take(1)).subscribe((auteur)=>{
+        this.userService.userName.subscribe((auteur)=>{
           this.auteur = auteur
         })
    }
