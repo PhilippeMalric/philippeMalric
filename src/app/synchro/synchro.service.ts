@@ -7,6 +7,7 @@ import { concatMap, map, take } from 'rxjs/operators';
 export interface Synchro  {
   id_firestore:string,
   time:number
+  time2:number
   seqNo:number,
   type:string,
   message:string,
@@ -97,6 +98,12 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
                 }
 
                 let date_now = Date.now()
+
+                if(newMessage.time2 != -1){
+                  newMessage.message = "" +(date_now - newMessage.time2)
+                }else{
+                  newMessage.message = "PING!"
+                }
 
                 const message = {
                     ...newMessage,

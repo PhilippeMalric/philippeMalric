@@ -40,6 +40,11 @@ export class RacineComponent implements OnInit {
   ping1_sent: boolean;
   ping1_items: any;
   response_ping1_items: any;
+  compteur: number;
+  n: number;
+  pingx_items: any;
+  pingx2_items: any;
+  auteur: string;
 
 
   constructor(private synchroService:SynchroService,
@@ -54,14 +59,50 @@ export class RacineComponent implements OnInit {
         var yyyy = today.getFullYear();
 
         this.today2 = yyyy  + '-' + mm + '-' + dd;
-
+        this.userService.userName.pipe(take(1)).subscribe((auteur)=>{
+          this.auteur = auteur
+        })
    }
 
 
 
   ngOnInit(): void {
 
-    this.newid = this.synchroService.create_Id()
+    this.compteur = 0
+    this.n = 10
+    this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
+      console.log("data")
+      console.log(data)
+      this.items = data.sort((a,b)=>{return (a.time - b.time)})
+      console.log("compteur",this.compteur)
+      console.log("ping"+(this.compteur + 1))
+      this.pingx_items = this.items.filter((data)=>{
+        return data.type == ("ping"+(this.compteur + 1)) && data.auteur == this.auteur
+      })
+      console.log("pingx_items",this.pingx_items)
+      if( this.pingx_items.length > 0){
+        this.compteur += 1
+
+        if(this.compteur < this.n){
+
+          this.newid = this.synchroService.create_Id()
+
+            this.synchroService.createMessage(
+              {auteur:this.auteur,
+                type:"ping"+(this.compteur + 1),
+                time2:this.pingx_items[0].time,
+                message: "" ,
+                seconde:this.secondes,
+                date:this.today2
+              },this.newid).subscribe()
+
+        }
+      }
+    })
+
+
+
+/*     this.newid = this.synchroService.create_Id()
     this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
       console.log("data")
       console.log(data)
@@ -97,22 +138,15 @@ export class RacineComponent implements OnInit {
             })
             this.ping1_sent = true
           }
-
         }
-
-
-
       }
-
-
-
-    })
+    }) */
   }
 
 
 
  deleteAll = ()=>{
-
+  this.compteur = 0
   this.items.map((item)=>{
     this.synchroService.deleteMessage(item.id_firestore)
   })
@@ -130,6 +164,7 @@ export class RacineComponent implements OnInit {
       this.synchroService.createMessage(
         {auteur:data,
           type:"game",
+          time2:-1,
           message: ""+ Date.now(),
           seconde:this.secondes,
           date:this.today2
@@ -150,6 +185,7 @@ export class RacineComponent implements OnInit {
       this.synchroService.createMessage(
         {auteur:data,
           type:"ping1",
+          time2:-1,
           message:""+ Date.now(),
           seconde:this.secondes,
           date:this.today2
