@@ -76,98 +76,6 @@ export class RacineComponent implements OnInit {
    }
 
 
-   create(): void {
-
-   }
-
-   createAuteurs(): void {
-
-    console.log("ok : auteur")
-    this.auteurs = this.items.map((data:Synchro)=>{
-
-      return data.auteur
-
-
-    }).filter(this.onlyUnique);
-
-
-
-   }
-
-   reelPing3up(): void {
-
-
-    console.log("ok : itemsReelDiff")
-
-    this.itemsReelDiff = this.items.filter((data:Synchro)=>{
-      return data.type != "ping1" && data.type != "ping2"
-    })
-
-    this.diffBy_auteur = this.auteurs.map((auteur)=>{
-
-      let tab = this.itemsReelDiff.filter((data:Synchro)=>{
-
-        return data.auteur == auteur
-
-      }).map((data:Synchro)=>{
-        return Number(data.message)
-      })
-
-      let sum = tab.reduce((a, b) => a + b, 0)
-
-      return {mean:(sum / tab.length) || 0, auteur};
-    })
-
-
-   }
-
-   prochainPing(): void {
-    this.pingx_items = this.items.filter((data)=>{
-
-      let boot_condition = (this.compteur == 0 && data.type == "ping1")
-      let after_boot_condition = data.type == ("ping"+(this.compteur + 1)) && data.auteur == this.auteur
-      console.log((boot_condition || after_boot_condition),boot_condition,after_boot_condition)
-      return (boot_condition || after_boot_condition)
-    })
-
-    this.pingx2_items = this.items.filter((data)=>{
-      return  data.type == ("ping"+(this.compteur + 2)) && data.auteur == this.auteur
-    })
-
-   console.log("pingx2_items", this.pingx2_items)
-
-    console.log("pingx_items",this.pingx_items)
-    if( this.pingx_items.length > 0 && !(this.pingx2_items.length > 0)){
-      this.compteur += 1
-
-      if(this.compteur < this.n){
-
-        this.newid = this.synchroService.create_Id()
-
-          this.synchroService.createMessage(
-            {auteur:this.auteur,
-              type:"ping"+(this.compteur + 1),
-              time2:this.pingx_items[0].time,
-              message: "" ,
-              seconde:this.secondes,
-              date:this.today2
-            },this.newid).subscribe()
-
-      }
-    }
-
-
-   }
-
-   resetIfempty(): void {
-    if(this.items.length == 0){
-      this.compteur = 0
-      this.itemsB = []
-    }
-
-   }
-
-
 
 
   ngOnInit(): void {
@@ -204,71 +112,12 @@ export class RacineComponent implements OnInit {
       console.log(this.auteurs,tabPing2)
 
 
+      // Pour éviter des erreurs
+      if(this.items.length > 1){
+        this.createOffset_by_auteur()
+        this.createBalanced_ping()
 
-      if(this.auteurs.length == tabPing2.length && this.items.length > 1){
-
-        console.log("auteurs",this.auteurs)
-
-        this.offsetBy_auteur = this.auteurs.map((auteur)=>{
-
-          let tab = this.items.filter((data:Synchro)=>{
-            return data.type == "ping2" && data.auteur == auteur
-          })
-          return {auteur,offset:Number(tab[0].message)-100}
-        })
-
-        console.log("ok : offsetBy_auteur",this.offsetBy_auteur)
-
-        let itemsB_by_auteur = this.auteurs.map((auteur)=>{
-          let itemsReelDiff_by_auteur_balanced = this.itemsReelDiff.filter(data=>{
-
-              return data.auteur == auteur
-
-            }).map(data=>{
-              let offset_current_auteur = this.offsetBy_auteur.filter((data2:Synchro)=>{
-                return data2.auteur == auteur
-              })
-              console.log(offset_current_auteur)
-              let currentOffset = offset_current_auteur[0].offset
-              console.log("ok : currentOffset",currentOffset)
-              let time_balanced = (Number(data.time) - currentOffset)
-              console.log(data,data.message,currentOffset,time_balanced)
-              data.time = time_balanced
-              return data
-
-          })
-          return itemsReelDiff_by_auteur_balanced
-        })
-
-        console.log("ok : itemsB_by_auteur",itemsB_by_auteur)
-        this.itemsB = [].concat.apply([], itemsB_by_auteur).sort((a,b)=>{return (a.time - b.time)});
-        console.log("ok : itemsB",this.itemsB )
-
-        if(this.itemsB.length > 15){
-
-          this.array_time_diff = [...Array(7).keys()].map(n=>{
-
-            let tab = this.itemsB.filter(data2=>{
-              return data2.type == "ping"+(n+3)
-            })
-            console.log((n+3),tab)
-            return tab[0].time - tab[1].time
-          })
-          console.log("array_time_diff",this.array_time_diff)
-
-          this.pings3 = this.itemsB.filter((data)=>{
-            return data.type == "ping3"
-          })
-          if(this.pings3.length > 1){
-            this.pings3_diff_time =  this.pings3[0].time - this.pings3[1].time
-          }
-          this.pings10 = this.itemsB.filter((data)=>{
-            return data.type == "ping10"
-          })
-          if(this.pings10.length > 1){
-            this.pings10_diff_time =  this.pings10[0].time - this.pings10[1].time
-          }
-        }
+        this.createDiff_between_ping()
 
 
       }
@@ -324,10 +173,8 @@ export class RacineComponent implements OnInit {
 
  deleteAll = ()=>{
   this.compteur = 0
-  this.items.map((item)=>{
-    this.synchroService.deleteMessage(item.id_firestore)
-  })
-
+  let ids = this.items.map((item)=>{return item.id_firestore})
+  this.synchroService.deleteAllMessage(ids)
  }
 
 
@@ -447,6 +294,159 @@ export class RacineComponent implements OnInit {
         }
       }
   }
+  createDiff_between_ping(): void {
+    if(this.itemsB.length > 15){
+
+      this.array_time_diff = [...Array(7).keys()].map(n=>{
+
+        let tab = this.itemsB.filter(data2=>{
+          return data2.type == "ping"+(n+3)
+        })
+        console.log((n+3),tab)
+        return tab[0].time - tab[1].time
+      })
+      console.log("array_time_diff",this.array_time_diff)
+
+      this.pings3 = this.itemsB.filter((data)=>{
+        return data.type == "ping3"
+      })
+      if(this.pings3.length > 1){
+        this.pings3_diff_time =  this.pings3[0].time - this.pings3[1].time
+      }
+      this.pings10 = this.itemsB.filter((data)=>{
+        return data.type == "ping10"
+      })
+      if(this.pings10.length > 1){
+        this.pings10_diff_time =  this.pings10[0].time - this.pings10[1].time
+      }
+    }
+   }
+
+   createBalanced_ping(): void {
+
+    let itemsB_by_auteur = this.auteurs.map((auteur)=>{
+      let itemsReelDiff_by_auteur_balanced = this.itemsReelDiff.filter(data=>{
+
+          return data.auteur == auteur
+
+        }).map(data=>{
+          let offset_current_auteur = this.offsetBy_auteur.filter((data2:Synchro)=>{
+            return data2.auteur == auteur
+          })
+          console.log(offset_current_auteur)
+          let currentOffset = offset_current_auteur[0].offset
+          console.log("ok : currentOffset",currentOffset)
+          let time_balanced = (Number(data.time) - currentOffset)
+          console.log(data,data.message,currentOffset,time_balanced)
+          data.time = time_balanced
+          return data
+
+        })
+        return itemsReelDiff_by_auteur_balanced
+      })
+
+      console.log("ok : itemsB_by_auteur",itemsB_by_auteur)
+      this.itemsB = [].concat.apply([], itemsB_by_auteur).sort((a,b)=>{return (a.time - b.time)});
+      console.log("ok : itemsB",this.itemsB )
+
+  }
+   createOffset_by_auteur(): void {
+
+    this.offsetBy_auteur = this.auteurs.map((auteur)=>{
+
+      let tab = this.items.filter((data:Synchro)=>{
+        return data.type == "ping2" && data.auteur == auteur
+      })
+      return {auteur,offset:Number(tab[0].message)-100}
+    })
+
+    console.log("ok : offsetBy_auteur",this.offsetBy_auteur)
+   }
+
+   createAuteurs(): void {
+
+    console.log("ok : auteur")
+    this.auteurs = this.items.map((data:Synchro)=>{
+      return data.auteur
+    }).filter(this.onlyUnique);
+
+
+
+   }
+
+   reelPing3up(): void {
+
+
+    console.log("ok : itemsReelDiff")
+
+    this.itemsReelDiff = this.items.filter((data:Synchro)=>{
+      return data.type != "ping1" && data.type != "ping2"
+    })
+
+    this.diffBy_auteur = this.auteurs.map((auteur)=>{
+
+      let tab = this.itemsReelDiff.filter((data:Synchro)=>{
+
+        return data.auteur == auteur
+
+      }).map((data:Synchro)=>{
+        return Number(data.message)
+      })
+
+      let sum = tab.reduce((a, b) => a + b, 0)
+
+      return {mean:(sum / tab.length) || 0, auteur};
+    })
+
+
+   }
+
+   prochainPing(): void {
+    this.pingx_items = this.items.filter((data)=>{
+
+      let boot_condition = (this.compteur == 0 && data.type == "ping1")
+      let after_boot_condition = data.type == ("ping"+(this.compteur + 1)) && data.auteur == this.auteur
+      console.log((boot_condition || after_boot_condition),boot_condition,after_boot_condition)
+      return (boot_condition || after_boot_condition)
+    })
+
+    this.pingx2_items = this.items.filter((data)=>{
+      return  data.type == ("ping"+(this.compteur + 2)) && data.auteur == this.auteur
+    })
+
+   console.log("pingx2_items", this.pingx2_items)
+
+    console.log("pingx_items",this.pingx_items)
+    if( this.pingx_items.length > 0 && !(this.pingx2_items.length > 0)){
+      this.compteur += 1
+
+      if(this.compteur < this.n){
+
+        this.newid = this.synchroService.create_Id()
+
+          this.synchroService.createMessage(
+            {auteur:this.auteur,
+              type:"ping"+(this.compteur + 1),
+              time2:this.pingx_items[0].time,
+              message: "" ,
+              seconde:this.secondes,
+              date:this.today2
+            },this.newid).subscribe()
+
+      }
+    }
+
+
+   }
+
+   resetIfempty(): void {
+    if(this.items.length == 0){
+      this.compteur = 0
+      this.itemsB = []
+    }
+
+   }
+
 
   compareNombres(a, b) {
     return b.seqNo - a.seqNo;

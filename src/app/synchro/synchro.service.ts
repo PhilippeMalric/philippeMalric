@@ -58,7 +58,18 @@ export class SynchroService {
   }
 
 
+  deleteAllMessage(ids:string[]) {
+    console.log("deleted All" ,ids)
+    const batch = this.afs.firestore.batch()
 
+    for(let id of ids){
+      const myRef = this.afs.doc(`synchro/${id}`).ref
+      console.log("REf : ",myRef);
+
+      batch.delete(myRef)
+    }
+    return from(batch.commit())
+}
 
   deleteMessage(messageid:string) {
     console.log("deleted" ,messageid)
