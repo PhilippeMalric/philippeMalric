@@ -18,7 +18,7 @@
     liste modifiable avec auteur
 
 -->
- <h1>Le plus rapide gagne 10</h1>
+ <h1>Le plus rapide gagne 11</h1>
 
         <div  class="buttonDiv1" style="max-width:10000px;">
             <mat-tab-group animationDuration="0ms">
@@ -50,19 +50,22 @@
 
                                 </mat-card-content>
                               </mat-card>
+                              <mat-card class="d-card" style="width:400px;margin: auto;margin-top:10px;margin-bottom:10px;">
+                                <mat-card-title>Offset</mat-card-title>
+                                <mat-card-content
+                                    style="width:150px;margin: auto;">
+                                    <div  *ngFor="let off of offsetBy_auteur" style="max-width: 200 px;margin-top:10px;">
+                                    <mat-card class="d-card">
+                                      <mat-card-title>{{off.auteur}}</mat-card-title>
+                                      <mat-card-content
+                                          style="max-width: 150 px;">
+                                          {{off.offset}}
+                                      </mat-card-content>
+                                    </mat-card>
+                                  </div>
 
-
-
-                            <h2>Ping 3 time Diff  : </h2>
-                            <p>
-                              {{pings3_diff_time}}
-                            </p>
-                            <h2>Ping 10 time Diff  : </h2>
-                            <p>
-                              {{pings10_diff_time}}
-                            </p>
-
-
+                                </mat-card-content>
+                              </mat-card>
                 </mat-tab>
 
 

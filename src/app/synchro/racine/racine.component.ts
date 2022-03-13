@@ -92,11 +92,6 @@ export class RacineComponent implements OnInit {
 
       this.resetIfempty()
 
-
-
-
-
-
       this.prochainPing()
 
       this.createAuteurs()
@@ -295,7 +290,7 @@ export class RacineComponent implements OnInit {
       }
   }
   createDiff_between_ping(): void {
-    if(this.itemsB.length > 15){
+    if(this.itemsB.length > 3){
 
       this.array_time_diff = [...Array(7).keys()].map(n=>{
 
@@ -303,7 +298,12 @@ export class RacineComponent implements OnInit {
           return data2.type == "ping"+(n+3)
         })
         console.log((n+3),tab)
-        return tab[0].time - tab[1].time
+        let diff = 0
+        if(tab.length > 1){
+          diff = tab[0].time - tab[1].time
+        }
+
+        return diff
       })
       console.log("array_time_diff",this.array_time_diff)
 
@@ -350,6 +350,7 @@ export class RacineComponent implements OnInit {
       console.log("ok : itemsB",this.itemsB )
 
   }
+
    createOffset_by_auteur(): void {
 
     this.offsetBy_auteur = this.auteurs.map((auteur)=>{
