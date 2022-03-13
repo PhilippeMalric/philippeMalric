@@ -18,7 +18,7 @@
     liste modifiable avec auteur
 
 -->
- <h1>Le plus rapide gagne 11</h1>
+ <h1>Le plus rapide gagne 12</h1>
 
         <div  class="buttonDiv1" style="max-width:10000px;">
             <mat-tab-group animationDuration="0ms">
@@ -80,10 +80,10 @@
                 <mat-tab label="Lancer">
 
                     <p>
-                        <button mat-raised-button color="accent" (click)="set()">Lancer</button>
+                        <button mat-raised-button color="accent" (click)="ping1()">Lancer</button>
                     </p>
                     <p>
-                      <button mat-raised-button color="warn" class="go" [ngClass]="{'hide':wait}" (click)="deleteAll()">DeleteAll</button>
+                      <button mat-raised-button color="warn" class="go" (click)="deleteAll()">DeleteAll</button>
                     </p>
                     <mat-slider
                             [max]="10"
