@@ -76,12 +76,105 @@ export class RacineComponent implements OnInit {
    }
 
 
+   create(): void {
+
+   }
+
+   createAuteurs(): void {
+
+    console.log("ok : auteur")
+    this.auteurs = this.items.map((data:Synchro)=>{
+
+      return data.auteur
+
+
+    }).filter(this.onlyUnique);
+
+
+
+   }
+
+   reelPing3up(): void {
+
+
+    console.log("ok : itemsReelDiff")
+
+    this.itemsReelDiff = this.items.filter((data:Synchro)=>{
+      return data.type != "ping1" && data.type != "ping2"
+    })
+
+    this.diffBy_auteur = this.auteurs.map((auteur)=>{
+
+      let tab = this.itemsReelDiff.filter((data:Synchro)=>{
+
+        return data.auteur == auteur
+
+      }).map((data:Synchro)=>{
+        return Number(data.message)
+      })
+
+      let sum = tab.reduce((a, b) => a + b, 0)
+
+      return {mean:(sum / tab.length) || 0, auteur};
+    })
+
+
+   }
+
+   prochainPing(): void {
+    this.pingx_items = this.items.filter((data)=>{
+
+      let boot_condition = (this.compteur == 0 && data.type == "ping1")
+      let after_boot_condition = data.type == ("ping"+(this.compteur + 1)) && data.auteur == this.auteur
+      console.log((boot_condition || after_boot_condition),boot_condition,after_boot_condition)
+      return (boot_condition || after_boot_condition)
+    })
+
+    this.pingx2_items = this.items.filter((data)=>{
+      return  data.type == ("ping"+(this.compteur + 2)) && data.auteur == this.auteur
+    })
+
+   console.log("pingx2_items", this.pingx2_items)
+
+    console.log("pingx_items",this.pingx_items)
+    if( this.pingx_items.length > 0 && !(this.pingx2_items.length > 0)){
+      this.compteur += 1
+
+      if(this.compteur < this.n){
+
+        this.newid = this.synchroService.create_Id()
+
+          this.synchroService.createMessage(
+            {auteur:this.auteur,
+              type:"ping"+(this.compteur + 1),
+              time2:this.pingx_items[0].time,
+              message: "" ,
+              seconde:this.secondes,
+              date:this.today2
+            },this.newid).subscribe()
+
+      }
+    }
+
+
+   }
+
+   resetIfempty(): void {
+    if(this.items.length == 0){
+      this.compteur = 0
+      this.itemsB = []
+    }
+
+   }
+
+
+
 
   ngOnInit(): void {
     this.pings3_diff_time = 0
     this.pings3 = []
     this.compteur = 0
-    this.n = 10
+    this.n = 3
     this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
       console.log("data")
       console.log(data)
@@ -89,74 +182,17 @@ export class RacineComponent implements OnInit {
       console.log("compteur",this.compteur)
       console.log("ping"+(this.compteur + 1))
 
-      if(this.items.length == 0){
-        this.compteur = 0
-        this.itemsB = []
-      }
+      this.resetIfempty()
 
 
-      this.pingx_items = this.items.filter((data)=>{
-
-        let boot_condition = (this.compteur == 0 && data.type == "ping1")
-        let after_boot_condition = data.type == ("ping"+(this.compteur + 1)) && data.auteur == this.auteur
-        console.log((boot_condition || after_boot_condition),boot_condition,after_boot_condition)
-        return (boot_condition || after_boot_condition)
-      })
-
-      this.pingx2_items = this.items.filter((data)=>{
-        return  data.type == ("ping"+(this.compteur + 2)) && data.auteur == this.auteur
-      })
-
-     console.log("pingx2_items", this.pingx2_items)
-
-      console.log("pingx_items",this.pingx_items)
-      if( this.pingx_items.length > 0 && !(this.pingx2_items.length > 0)){
-        this.compteur += 1
-
-        if(this.compteur < this.n){
-
-          this.newid = this.synchroService.create_Id()
-
-            this.synchroService.createMessage(
-              {auteur:this.auteur,
-                type:"ping"+(this.compteur + 1),
-                time2:this.pingx_items[0].time,
-                message: "" ,
-                seconde:this.secondes,
-                date:this.today2
-              },this.newid).subscribe()
-
-        }
-      }
-
-      console.log("ok : auteur")
-      this.auteurs = this.items.map((data:Synchro)=>{
-
-        return data.auteur
 
 
-      }).filter(this.onlyUnique);
 
-      console.log("ok : itemsReelDiff")
 
-      this.itemsReelDiff = this.items.filter((data:Synchro)=>{
-        return data.type != "ping1" && data.type != "ping2"
-      })
 
-      this.diffBy_auteur = this.auteurs.map((auteur)=>{
 
-        let tab = this.itemsReelDiff.filter((data:Synchro)=>{
-
-          return data.auteur == auteur
-
-        }).map((data:Synchro)=>{
-          return Number(data.message)
-        })
-
-        let sum = tab.reduce((a, b) => a + b, 0)
-
-        return {mean:(sum / tab.length) || 0, auteur};
-      })
+      this.createAuteurs()
+      this.reelPing3up()
 
       let tabPing2 = this.items.filter((data:Synchro)=>{
         return data.type == "ping2"
@@ -166,6 +202,8 @@ export class RacineComponent implements OnInit {
 
 
       console.log(this.auteurs,tabPing2)
+
+
 
       if(this.auteurs.length == tabPing2.length && this.items.length > 1){
 

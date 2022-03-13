@@ -18,7 +18,7 @@
     liste modifiable avec auteur
 
 -->
- <h1>Le plus rapide gagne 6</h1>
+ <h1>Le plus rapide gagne 7</h1>
 
         <div  class="buttonDiv1" style="max-width:10000px;">
             <mat-tab-group animationDuration="0ms">
@@ -33,14 +33,26 @@
 
                             </p>
 
-                            <h2>Différence entre les pings (local): </h2>
-                            <div *ngFor="let diff of diffBy_auteur">
 
-                             <p>
-                              Auteur : {{diff.auteur}}, moyenne : {{diff.mean}}
-                             </p>
+                              <mat-card class="d-card" style="width:400px;margin: auto;">
+                                <mat-card-title>Différence entre les pings (local)</mat-card-title>
+                                <mat-card-content
+                                    style="width:150px;margin: auto;">
+                                    <div  *ngFor="let diff of diffBy_auteur" style="max-width: 200 px;margin-top:10px">
+                                    <mat-card class="d-card">
+                                      <mat-card-title>{{diff.auteur}}</mat-card-title>
+                                      <mat-card-content
+                                          style="max-width: 150 px;">
+                                          {{diff.mean}}
+                                      </mat-card-content>
+                                    </mat-card>
+                                  </div>
 
-                            </div>
+                                </mat-card-content>
+                              </mat-card>
+
+
+
                             <h2>Ping 3 time Diff  : </h2>
                             <p>
                               {{pings3_diff_time}}
