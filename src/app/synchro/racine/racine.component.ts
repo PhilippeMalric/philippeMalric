@@ -174,7 +174,7 @@ export class RacineComponent implements OnInit {
     this.pings3_diff_time = 0
     this.pings3 = []
     this.compteur = 0
-    this.n = 3
+    this.n = 4
     this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
       console.log("data")
       console.log(data)
@@ -189,7 +189,7 @@ export class RacineComponent implements OnInit {
 
 
 
-
+      this.prochainPing()
 
       this.createAuteurs()
       this.reelPing3up()
