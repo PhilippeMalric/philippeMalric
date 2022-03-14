@@ -18,15 +18,18 @@
     liste modifiable avec auteur
 
 -->
- <h1>Le plus rapide gagne 12</h1>
+ <h1>Le plus rapide gagne 17</h1>
 
         <div  class="buttonDiv1" style="max-width:10000px;">
             <mat-tab-group animationDuration="0ms">
                 <mat-tab label="Principale">
 
                             <button mat-raised-button color="primary" class="go" [ngClass]="{'hide':wait}" (click)="add()">Go</button>
+                            <h1 *ngIf="gagnant!='' && gagnantShow">Gagnant : {{gagnant}}</h1>
 
-                            <h2>Présents : </h2>
+                </mat-tab>
+                <mat-tab label="Joueurs">
+                  <h2>Présents : </h2>
                             <p *ngFor="let auteurs of auteurs">
 
                               {{auteurs}}
@@ -66,8 +69,8 @@
 
                                 </mat-card-content>
                               </mat-card>
+                              <button mat-raised-button color="primary" class="go" (click)="changeName()">Change Name</button>
                 </mat-tab>
-
 
                 <mat-tab label="Cartes">
                    <app-items-viewer [items]="items"></app-items-viewer>
@@ -75,7 +78,9 @@
                 <mat-tab label="Cartes balancées">
                   <app-items-viewer [items]="itemsB"></app-items-viewer>
                </mat-tab>
-
+               <mat-tab label="Cartes Game">
+                <app-items-viewer [items]="gameCards"></app-items-viewer>
+             </mat-tab>
 
                 <mat-tab label="Lancer">
 
@@ -98,10 +103,6 @@
                     </div>
                 </mat-tab>
               </mat-tab-group>
-
-
-
-
     </div>
 
 <!--     <h1>Les dépenses test</h1>

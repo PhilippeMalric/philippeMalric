@@ -61,6 +61,9 @@ export class RacineComponent implements OnInit {
   ping1_auteur: any;
   gameOn: any;
   offset: any;
+  gameCards: any;
+  gagnant: any;
+  gagnantShow: any;
 
 
   constructor(private synchroService:SynchroService,
@@ -84,8 +87,10 @@ export class RacineComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.gagnant = ""
     this.pings3_diff_time = 0
     this.pings3 = []
+    this.gameCards = []
     this.compteur = 0
     this.n = 4
     this.synchroService.getItems().pipe().subscribe((data:Synchro[])=>{
@@ -138,12 +143,28 @@ export class RacineComponent implements OnInit {
           console.log("offset",this.offset,this.gameOn[0].time2 - Date.now());
 
 
-          let time_to_wait = (this.gameOn[0].time2 - Date.now() ) - this.offset
+          let time_to_wait = (this.gameOn[0].time2 - Date.now() ) + this.offset
           console.log("time_to_wait",time_to_wait);
           setTimeout((data)=>{
             this.wait = false
           },time_to_wait)
         }
+        this.gameCards = this.items.filter((data:Synchro)=>{
+          return data.type == "game"
+        })
+
+        if(this.gameCards.length > 0){
+
+          this.gagnant = this.gameCards.sort((a,b)=> a.time2 - b.time2)
+                              .map((data:Synchro)=>{return data.auteur})[0]
+
+          setTimeout(() => {
+            this.gagnantShow = true
+          }, 500);
+
+        }
+
+
 
       }
     })
@@ -160,17 +181,23 @@ export class RacineComponent implements OnInit {
  }
 
 
+changeName = ()=>{
+  this.auteur = "Test1"
+}
+
 
   add(){
 
     this.newid = this.synchroService.create_Id()
 
+    let timeClick = Date.now() - this.offset
+    console.log("now",Date.now());
     //console.log("add")
     this.synchroService.createMessage(
       {auteur:this.auteur,
         type:"game",
-        time2:-1,
-        message: ""+ (Date.now() - this.offset),
+        time2:timeClick,
+        message: "",
         seconde:this.secondes,
         date:this.today2
       },this.newid).subscribe()
@@ -349,24 +376,44 @@ export class RacineComponent implements OnInit {
   }
 
    createOffset_by_auteur(): void {
+   // if(){
+    let tab_erreur = false
+      this.offsetBy_auteur = this.auteurs.map((auteur)=>{
 
-    this.offsetBy_auteur = this.auteurs.map((auteur)=>{
+        let tab = this.items.filter((data:Synchro)=>{
+          return data.type == "ping2" && data.auteur == auteur
+        })
 
-      let tab = this.items.filter((data:Synchro)=>{
-        return data.type == "ping2" && data.auteur == auteur
+        let offset = 0
+
+        if(tab.length > 0){
+          offset = Number(tab[0].message)
+        }else{
+          tab_erreur = true
+        }
+
+        return {auteur,offset}
       })
-      return {auteur,offset:Number(tab[0].message)-100}
-    })
-    let offset_current_auteur = this.offsetBy_auteur.filter((data2:Synchro)=>{
-      return data2.auteur == this.auteur
-    })
+
+      if(tab_erreur){
+        this.offsetBy_auteur = []
+      }
 
 
-    //console.log("offset_current_auteur",offset_current_auteur)
-    this.offset =  offset_current_auteur[0].offset
+      let offset_current_auteur = this.offsetBy_auteur.filter((data2:Synchro)=>{
+        return data2.auteur == this.auteur
+      })
 
-    this.ready = true
-    //console.log("ok : offsetBy_auteur",this.offsetBy_auteur)
+      if(offset_current_auteur.length > 0){
+          //console.log("offset_current_auteur",offset_current_auteur)
+          this.offset =  offset_current_auteur[0].offset
+
+          this.ready = true
+          //console.log("ok : offsetBy_auteur",this.offsetBy_auteur)
+      }
+   // }
+
+
    }
 
    createAuteurs(): void {
@@ -386,8 +433,9 @@ export class RacineComponent implements OnInit {
     //console.log("ok : itemsReelDiff")
 
     this.itemsReelDiff = this.items.filter((data:Synchro)=>{
-      return data.type != "ping1" && data.type != "ping2"
+      return data.type != "ping1" && data.type != "ping2" && data.type.substring(0, 4) == "ping"
     })
+console.log("itemsReelDiff",this.itemsReelDiff);
 
     this.diffBy_auteur = this.auteurs.map((auteur)=>{
 
@@ -452,6 +500,8 @@ export class RacineComponent implements OnInit {
       this.ready = false
       this.gameStartedByMe = false
       this.wait = true
+      this.gagnant = ""
+      this.gagnantShow = false
     }
 
    }

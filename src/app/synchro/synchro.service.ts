@@ -116,6 +116,10 @@ createMessage(newMessage: Partial<Synchro>, messageid:string) {
                   newMessage.message = "PING!"
                 }
 
+                if(newMessage.type == "game"){
+                  newMessage.message = ""+newMessage.time2
+                }
+
                 const message = {
                     ...newMessage,
                     time: date_now,
